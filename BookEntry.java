@@ -4,8 +4,11 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.*;
 import java.sql.SQLException;
 import java.awt.*;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.SwingConstants;
 
 public class BookEntry extends JFrame{
 	JLabel lbname = new JLabel("Book Name");
@@ -22,79 +25,89 @@ public class BookEntry extends JFrame{
 	JButton cancel = new JButton("Cancel");
 	JButton bookList = new JButton("Book List");
 	
-	
+	String database = "jdbc:mysql://localhost/myat";
+	String tableName = "bookEntry";
+	String user = "root";
+	String password = "694737";
 		
 	public BookEntry(){
-		JPanel p1 = new JPanel(new GridLayout(4,2));
-		
+		JPanel p1 = new JPanel(new GridLayout(4,2));	
 		Font myFont = new Font("Roboto",Font.PLAIN,20);
 		
+		//setting labels fonts
 		lbname.setFont(myFont);
 		laname.setFont(myFont);
 		lpyear.setFont(myFont);
 		lpname.setFont(myFont);
 		
-		lbname.setForeground(new Color(32,32,32));
-		laname.setForeground(new Color(32,32,32));
-		lpyear.setForeground(new Color(32,32,32));
-		lpname.setForeground(new Color(32,32,32));
+		Color fontColor = new Color(32,32,32);
+		//setting labels fonts color
+		lbname.setForeground(fontColor);
+		laname.setForeground(fontColor);
+		lpyear.setForeground(fontColor);
+		lpname.setForeground(fontColor);
 		
+		//setting size of text field box
 		tbname.setPreferredSize(new Dimension(20,30));
 		taname.setPreferredSize(new Dimension(20,30));
 		tpyear.setPreferredSize(new Dimension(20,30));
 		tpname.setPreferredSize(new Dimension(20,30));
 		
-		tbname.setBackground(new Color(255,255,255));
-		taname.setBackground(new Color(255,255,255));
-		tpyear.setBackground(new Color(255,255,255));
-		tpname.setBackground(new Color(255,255,255));
-		
+		// for alignment of label and text fields
 		LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 5, 10);
-		
+		//setting label panels alignments
 		JPanel plb = new JPanel(layout);
 		JPanel pla = new JPanel(layout);
 		JPanel ply = new JPanel(layout);
 		JPanel plp = new JPanel(layout);
+		//adding labels into aligned panels
 		plb.add(lbname);
 		pla.add(laname);
 		ply.add(lpyear);
 		plp.add(lpname);
-		
-		
+			
+		//setting text field panels alignments
 		JPanel ptb = new JPanel(layout);
 		JPanel pta = new JPanel(layout);
 		JPanel pty = new JPanel(layout);
 		JPanel ptp = new JPanel(layout);
-		
+		//adding text fields into aligned panels
 		ptb.add(tbname);
 		pta.add(taname);
 		pty.add(tpyear);
 		ptp.add(tpname);
 		
+		//adding small panels into main GridLayout panel
 		p1.add(plb);
 		p1.add(ptb);
+		
 		p1.add(pla);
 		p1.add(pta);
+		
 		p1.add(ply);
 		p1.add(pty);
+		
 		p1.add(plp);
 		p1.add(ptp);
 		
+		//creating panel for buttons
 		JPanel p2 = new JPanel(new FlowLayout());
 		p2.add(save);
 		p2.add(cancel);
 		p2.add(bookList);
 						
+		//creating main panel
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(p1,BorderLayout.CENTER);
 		panel.add(p2,BorderLayout.SOUTH);		
 		add(panel);
 		
+		// background color of main panel
 		Color bgcolor = new Color(240,240,240);
-		
-		p1.setBackground(bgcolor);
+		// background color of button panel
 		p2.setBackground(new Color(192,192,192));
 		
+		//setting background color of label panels and textfield panels
 		plb.setBackground(bgcolor);
 		pla.setBackground(bgcolor);
 		ply.setBackground(bgcolor);
@@ -120,12 +133,30 @@ public class BookEntry extends JFrame{
 			bookListFrame.setLocationRelativeTo(null);
 			bookListFrame.setVisible(true);
 			
+			// creating table for data outputs
 			String[] columns = {"Book Title","Author Name","Year","Publisher"};
 			DefaultTableModel model = new DefaultTableModel(columns,0);
-			JTable table = new JTable(model);						
+			JTable table = new JTable(model);
+			table.setRowHeight(25);
+			
+			table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
+			table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+			table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+			for (int i = 0; i < table.getColumnCount(); i++) {
+			    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			}
+			
+			
+
+			
+			
+			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.1.3:3306/studentdb","Myat_Oo_Thar","694737");
+				Connection connection = DriverManager.getConnection(database, user, password);
 				System.out.println("Connection created");
 				String sqlSelect = "select * from bookEntry";
 				Statement statement = connection.createStatement();
@@ -170,8 +201,8 @@ public class BookEntry extends JFrame{
 				}else {
 					try {
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.1.3:3306/studentdb","Myat_Oo_Thar","694737");
-						String sqlInsert = "insert into bookEntry(book_Title,author_name,publish_year,publisher_name) values('"+bname+"','"+aname+"','"+pyear+"','"+pname+"')";						
+						Connection connection = DriverManager.getConnection(database, user, password);
+						String sqlInsert = "insert into bookEntry(book_name,author_name,publish_year,publisher_name) values('"+bname+"','"+aname+"','"+pyear+"','"+pname+"')";						
 						PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
 						pstatement.executeUpdate();				
 						connection.close();
@@ -202,7 +233,7 @@ public class BookEntry extends JFrame{
 		bookentry.setIconImage(icon.getImage());
 		
 		bookentry.setTitle("Book Entry");
-		bookentry.setSize(500,500);
+		bookentry.setSize(500,300);
 		bookentry.setLocationRelativeTo(null);
 		bookentry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		bookentry.setVisible(true);
