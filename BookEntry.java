@@ -25,9 +25,9 @@ public class BookEntry extends JFrame{
 	JButton cancel = new JButton("Cancel");
 	JButton bookList = new JButton("Book List");
 	
-	String database = "jdbc:mysql://localhost/myat";
-	String tableName = "bookEntry";
-	String user = "root";
+	String database = "jdbc:mysql://192.168.1.8:3306/myat";
+	String tableName = "bookentry";
+	String user = "myat";
 	String password = "694737";
 		
 	public BookEntry(){
@@ -142,6 +142,7 @@ public class BookEntry extends JFrame{
 			table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
 			table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
 			table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
+			//make the text in table CENTER
 			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -149,18 +150,14 @@ public class BookEntry extends JFrame{
 			    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 			}
 			
-			
-
-			
-			
-			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
+				System.out.println("Driver created");
 				Connection connection = DriverManager.getConnection(database, user, password);
-				System.out.println("Connection created");
-				String sqlSelect = "select * from bookEntry";
+				System.out.println("Database connected");
+				String sqlSelect = "select * from ";
 				Statement statement = connection.createStatement();
-				ResultSet resultSet = statement.executeQuery(sqlSelect);
+				ResultSet resultSet = statement.executeQuery(sqlSelect + tableName);
 				while(resultSet.next()) {
 					model.addRow(new Object[] {
 							resultSet.getString(1),
@@ -202,7 +199,7 @@ public class BookEntry extends JFrame{
 					try {
 						Class.forName("com.mysql.cj.jdbc.Driver");
 						Connection connection = DriverManager.getConnection(database, user, password);
-						String sqlInsert = "insert into bookEntry(book_name,author_name,publish_year,publisher_name) values('"+bname+"','"+aname+"','"+pyear+"','"+pname+"')";						
+						String sqlInsert = "insert into bookentry(book_name,author_name,publish_year,publisher_name) values('"+bname+"','"+aname+"','"+pyear+"','"+pname+"')";						
 						PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
 						pstatement.executeUpdate();				
 						connection.close();
