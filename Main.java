@@ -189,6 +189,60 @@ public class Main extends JFrame {
 			
 		});
 		
+		b3.addActionListener(e -> {
+			pMain.removeAll();
+		    pMain.setLayout(new BorderLayout());
+			// creating table for data outputs
+			String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date","Return Date"};
+			DefaultTableModel model = new DefaultTableModel(columns,0);
+			JTable table = new JTable(model);
+			table.setRowHeight(25);
+			
+			table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
+			table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+			table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
+			//make the text in table CENTER
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+			for (int i = 0; i < table.getColumnCount(); i++) {
+			    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			}
+			
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				System.out.println("Driver created");
+				Connection connection = DriverManager.getConnection(url, user, password);
+				System.out.println("Database connected");
+				String sqlSelect = "select * from borrows";
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(sqlSelect);
+				while(resultSet.next()) {
+					model.addRow(new Object[] {
+							resultSet.getInt(1),
+							resultSet.getInt(2),
+							resultSet.getInt(3),
+							resultSet.getString(4),
+							resultSet.getString(5),
+							resultSet.getString(6)
+					});
+				}
+				
+				JScrollPane scrollPane = new JScrollPane(table);
+				scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
+				pMain.add(scrollPane, BorderLayout.CENTER);		
+				pMain.revalidate();
+			    pMain.repaint();
+				connection.close();
+			}//try
+			catch(SQLException se) {
+				se.printStackTrace();
+			}catch(ClassNotFoundException ce) {
+				System.out.println("ClassNotFoundException");
+				ce.printStackTrace();
+				
+			}//catch	
+		});
 		
 		add(pTop, BorderLayout.NORTH);
 		add(pBottom, BorderLayout.SOUTH);
