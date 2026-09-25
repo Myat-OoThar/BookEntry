@@ -1,4 +1,4 @@
-package test;
+package group;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;

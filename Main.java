@@ -1,6 +1,6 @@
 package group;
 
-
+//leeeeeeeeeeeeeeeeeeeeee
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.awt.Font;
@@ -25,8 +25,8 @@ public class Main extends JFrame {
 	String database = "project";
 	String user = "avnadmin";//avnadmin
 	String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
-	//String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
-	String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";
+	String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
+	//String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";
 	
 	JPanel pTop = new JPanel();
 	JPanel pBottom = new JPanel(new GridLayout(1,3));
