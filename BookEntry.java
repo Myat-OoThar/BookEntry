@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.SwingConstants;
 
 public class BookEntry extends JFrame{
-	Main main;
 	JLabel lbname = new JLabel("Book Name");
 	JLabel laname = new JLabel("Author Name");
 	JLabel lpyear = new JLabel("Publish Year");
@@ -26,21 +25,12 @@ public class BookEntry extends JFrame{
 	JButton cancel = new JButton("Cancel");
 	JButton bookList = new JButton("Book List");
 	
-	String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
-	String port = "10007";
-	String database = "project";
-	String user = "avnadmin";
-	String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
-	
-	String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";
-	
-//	String database = "jdbc:mysql://192.168.1.8:3306/myat";
-//	String tableName = "bookentry";
-//	String user = "myat";
-//	String password = "694737";
+	String database = "jdbc:mysql://192.168.1.8:3306/myat";
+	String tableName = "bookentry";
+	String user = "myat";
+	String password = "694737";
 		
-	public BookEntry(Main main){
-		this.main = main;
+	public BookEntry(){
 		JPanel p1 = new JPanel(new GridLayout(4,2));	
 		Font myFont = new Font("Roboto",Font.PLAIN,20);
 		
@@ -104,7 +94,7 @@ public class BookEntry extends JFrame{
 		JPanel p2 = new JPanel(new FlowLayout());
 		p2.add(save);
 		p2.add(cancel);
-		
+		p2.add(bookList);
 						
 		//creating main panel
 		JPanel panel = new JPanel(new BorderLayout());
@@ -130,10 +120,66 @@ public class BookEntry extends JFrame{
 		
 		save.addActionListener(new ButtonAction());
 		cancel.addActionListener(new ButtonAction());
-		
+		bookList.addActionListener(new ShowBList());
 						
 	}
+	class ShowBList implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			
+			//Create a new window when clicked to 'Book List' button
+			JFrame bookListFrame = new JFrame("Book List");
+			bookListFrame.setSize(500,500);
+			bookListFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			bookListFrame.setLocationRelativeTo(null);
+			bookListFrame.setVisible(true);
+			
+			// creating table for data outputs
+			String[] columns = {"Book Title","Author Name","Year","Publisher"};
+			DefaultTableModel model = new DefaultTableModel(columns,0);
+			JTable table = new JTable(model);
+			table.setRowHeight(25);
+			
+			table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
+			table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+			table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
+			//make the text in table CENTER
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
+			for (int i = 0; i < table.getColumnCount(); i++) {
+			    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			}
+			
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				System.out.println("Driver created");
+				Connection connection = DriverManager.getConnection(database, user, password);
+				System.out.println("Database connected");
+				String sqlSelect = "select * from ";
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery(sqlSelect + tableName);
+				while(resultSet.next()) {
+					model.addRow(new Object[] {
+							resultSet.getString(1),
+							resultSet.getString(2),
+							resultSet.getInt(3),
+							resultSet.getString(4)
+					});
+				}
+				
+				JScrollPane scrollPane = new JScrollPane(table);
+				scrollPane.setPreferredSize(new java.awt.Dimension(500,300));
+				bookListFrame.add(scrollPane);				
+				connection.close();
+			}//try
+			catch(SQLException se) {
+				se.printStackTrace();
+			}catch(ClassNotFoundException ce) {
+				System.out.println("ClassNotFoundException");
+				
+			}//catch			
+		}//method
+	}//ShowBList
 	
 	class ButtonAction implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
@@ -152,14 +198,13 @@ public class BookEntry extends JFrame{
 				}else {
 					try {
 						Class.forName("com.mysql.cj.jdbc.Driver");
-						Connection connection = DriverManager.getConnection(url, user, password);
-						String sqlInsert = "insert into BookList(bookTitle,author,publisher,publishYear) values('"+bname+"','"+aname+"','"+pname+"','"+pyear+"')";						
+						Connection connection = DriverManager.getConnection(database, user, password);
+						String sqlInsert = "insert into bookentry(book_name,author_name,publish_year,publisher_name) values('"+bname+"','"+aname+"','"+pyear+"','"+pname+"')";						
 						PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
 						pstatement.executeUpdate();				
 						connection.close();
 						
 						JOptionPane.showMessageDialog(null, "Saved Successfully");
-						main.clickB1();
 						
 						tbname.setText("");
 						taname.setText("");
@@ -180,7 +225,15 @@ public class BookEntry extends JFrame{
 		}//method
 	}
 	public static void main(String[] args) {
+		BookEntry bookentry = new BookEntry();
+		ImageIcon icon = new ImageIcon("C:\\Users\\myato\\Downloads\\onw\\myat\\src\\test\\panda.jpg");
+		bookentry.setIconImage(icon.getImage());
 		
+		bookentry.setTitle("Book Entry");
+		bookentry.setSize(500,300);
+		bookentry.setLocationRelativeTo(null);
+		bookentry.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bookentry.setVisible(true);
 		
 		
 		
