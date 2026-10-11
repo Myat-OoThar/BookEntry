@@ -116,13 +116,7 @@ public class Main extends JFrame {
 
 
 
-			newBtn3.addActionListener( b3e -> {
-				table.clearSelection();
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
 
-			});
 
     		
     		try {
@@ -165,6 +159,8 @@ public class Main extends JFrame {
 				JPanel p1 = new JPanel(new FlowLayout());
 				JPanel p2 = new JPanel(new FlowLayout());
 				JPanel panel = new JPanel(new BorderLayout(10,10));
+                JButton okButton = new JButton("OK");
+                JButton cancelButton = new JButton("Cancel");
 
 				JLabel l1 = new JLabel("New Value");
 
@@ -177,10 +173,10 @@ public class Main extends JFrame {
 				p1.add(l1);
 				p1.add(jt1);
 
-				p2.add(newBtn1);
-				p2.add(newBtn3);
+				p2.add(okButton);
+				p2.add(cancelButton);
 
-				newBtn1.addActionListener(a -> {
+				okButton.addActionListener(a -> {
 
 					inputedValue = jt1.getText();
 					System.out.println(inputedValue);
@@ -225,6 +221,7 @@ public class Main extends JFrame {
 
 					jt1.setText("");
 					inputedValue = null;
+                    removeEditFrame(bookEditFrame);
 
 					b1.doClick();
 
@@ -241,22 +238,23 @@ public class Main extends JFrame {
 				bookEditFrame.setSize(300,200);
 				bookEditFrame.setResizable(false);
 				bookEditFrame.setVisible(true);
-				bookEditFrame.setLocation(1400,250);
+				bookEditFrame.setLocation(1350,250);
 				bookEditFrame.add(panel);
 
-				newBtn3.addActionListener( b3e -> {
+				cancelButton.addActionListener( b3e -> {
+                    table.clearSelection();
 					bookEditFrame.dispose();
 				});
 
 
 
-				newBtn1.setPreferredSize(new Dimension(100,50));
-				newBtn3.setPreferredSize(new Dimension(100,50));
+				okButton.setPreferredSize(new Dimension(100,50));
+				cancelButton.setPreferredSize(new Dimension(100,50));
 
 
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
+				okButton.setBackground(Color.WHITE);
+
+				cancelButton.setBackground(Color.WHITE);
 
 				b2.addActionListener(e2 ->{removeEditFrame(bookEditFrame);});
 				b3.addActionListener(e2 ->{removeEditFrame(bookEditFrame);});
@@ -366,6 +364,9 @@ public class Main extends JFrame {
 				JPanel p1 = new JPanel(new FlowLayout());
 				JPanel p2 = new JPanel(new FlowLayout());
 				JPanel panel = new JPanel(new BorderLayout(10,10));
+                JButton okBtn = new JButton("OK");
+
+                JButton cancelBtn = new JButton("Cancel");
 
 				JLabel l1 = new JLabel("New Value");
 
@@ -378,10 +379,10 @@ public class Main extends JFrame {
 				p1.add(l1);
 				p1.add(jt1);
 
-				p2.add(newBtn1);
-				p2.add(newBtn3);
+				p2.add(okBtn);
+				p2.add(cancelBtn);
 
-				newBtn1.addActionListener(a -> {
+				okBtn.addActionListener(a -> {
 
 					inputedValue = jt1.getText();
 					System.out.println(inputedValue);
@@ -432,8 +433,9 @@ public class Main extends JFrame {
 
 					jt1.setText("");
 					inputedValue = null;
+                    removeEditFrame(memberEditFrame);
+                    b2.doClick();
 
-					b2.doClick();
 
 				});
 
@@ -448,22 +450,23 @@ public class Main extends JFrame {
 				memberEditFrame.setSize(300,200);
 				memberEditFrame.setResizable(false);
 				memberEditFrame.setVisible(true);
-				memberEditFrame.setLocation(1400,250);
+				memberEditFrame.setLocation(1350,250);
 				memberEditFrame.add(panel);
 
-				newBtn3.addActionListener( b3e -> {
+				cancelBtn.addActionListener( b3e -> {
+                    table.clearSelection();
 					memberEditFrame.dispose();
 				});
 
 
 
-				newBtn1.setPreferredSize(new Dimension(100,50));
-				newBtn3.setPreferredSize(new Dimension(100,50));
+				okBtn.setPreferredSize(new Dimension(100,50));
+				cancelBtn.setPreferredSize(new Dimension(100,50));
 
 
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
+				okBtn.setBackground(Color.WHITE);
+
+				cancelBtn.setBackground(Color.WHITE);
 
 				b1.addActionListener(e2 ->{removeEditFrame(memberEditFrame);});
 				b3.addActionListener(e2 ->{removeEditFrame(memberEditFrame);});
@@ -569,6 +572,8 @@ public class Main extends JFrame {
 				JPanel p1 = new JPanel(new FlowLayout());
 				JPanel p2 = new JPanel(new FlowLayout());
 				JPanel panel = new JPanel(new BorderLayout(10,10));
+                JButton okBtn = new JButton("OK");
+                JButton cancelBtn = new JButton("Cancel");
 
 				JLabel l1 = new JLabel("New Value");
 
@@ -581,10 +586,10 @@ public class Main extends JFrame {
 				p1.add(l1);
 				p1.add(jt1);
 
-				p2.add(newBtn1);
-				p2.add(newBtn3);
+				p2.add(okBtn);
+				p2.add(cancelBtn);
 
-				newBtn1.addActionListener(a -> {
+				okBtn.addActionListener(a -> {
 
 					inputedValue = jt1.getText();
 					System.out.println(inputedValue);
@@ -630,6 +635,7 @@ public class Main extends JFrame {
 
 					jt1.setText("");
 					inputedValue = null;
+                    removeEditFrame(borrowEditFrame);
 
 					b3.doClick();
 
@@ -646,22 +652,23 @@ public class Main extends JFrame {
 				borrowEditFrame.setSize(300,200);
 				borrowEditFrame.setResizable(false);
 				borrowEditFrame.setVisible(true);
-				borrowEditFrame.setLocation(1300,250);
+				borrowEditFrame.setLocation(1350,250);
 				borrowEditFrame.add(panel);
 
-				newBtn3.addActionListener( b3e -> {
+				cancelBtn.addActionListener( b3e -> {
+                    table.clearSelection();
 					borrowEditFrame.dispose();
 				});
 
 
 
-				newBtn1.setPreferredSize(new Dimension(100,50));
-				newBtn3.setPreferredSize(new Dimension(100,50));
+				okBtn.setPreferredSize(new Dimension(100,50));
+				cancelBtn.setPreferredSize(new Dimension(100,50));
 
 
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
+				okBtn.setBackground(Color.WHITE);
+
+				cancelBtn.setBackground(Color.WHITE);
 
 				b2.addActionListener(e2 ->{removeEditFrame(borrowEditFrame);});
 				b3.addActionListener(e2 ->{removeEditFrame(borrowEditFrame);});
@@ -763,6 +770,8 @@ public class Main extends JFrame {
 				JPanel p1 = new JPanel(new FlowLayout());
 				JPanel p2 = new JPanel(new FlowLayout());
 				JPanel panel = new JPanel(new BorderLayout(10,10));
+                JButton okBtn = new JButton("OK");
+                JButton cancelBtn = new JButton("Cancel");
 
 				JLabel l1 = new JLabel("New Value");
 
@@ -775,10 +784,10 @@ public class Main extends JFrame {
 				p1.add(l1);
 				p1.add(jt1);
 
-				p2.add(newBtn1);
-				p2.add(newBtn3);
+				p2.add(okBtn);
+				p2.add(cancelBtn);
 
-				newBtn1.addActionListener(a -> {
+				okBtn.addActionListener(a -> {
 
 					inputedValue = jt1.getText();
 					System.out.println(inputedValue);
@@ -823,6 +832,7 @@ public class Main extends JFrame {
 
 					jt1.setText("");
 					inputedValue = null;
+                    removeEditFrame(returnEditFrame);
 
 					b4.doClick();
 
@@ -839,10 +849,11 @@ public class Main extends JFrame {
 				returnEditFrame.setSize(300,200);
 				returnEditFrame.setResizable(false);
 				returnEditFrame.setVisible(true);
-				returnEditFrame.setLocation(1400,250);
+				returnEditFrame.setLocation(1350,250);
 				returnEditFrame.add(panel);
 
-				newBtn3.addActionListener( b3e -> {
+				cancelBtn.addActionListener( b3e -> {
+                    table.clearSelection();
 					returnEditFrame.dispose();
 				});
 
@@ -852,9 +863,9 @@ public class Main extends JFrame {
 				newBtn3.setPreferredSize(new Dimension(100,50));
 
 
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
+				okBtn.setBackground(Color.WHITE);
+
+				cancelBtn.setBackground(Color.WHITE);
 
 				b2.addActionListener(e2 ->{removeEditFrame(returnEditFrame);});
 				b3.addActionListener(e2 ->{removeEditFrame(returnEditFrame);});
@@ -897,10 +908,6 @@ public class Main extends JFrame {
 			for (int i = 0; i < table.getColumnCount(); i++) {
 			    table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
 			}
-
-
-
-
 
 			
 			try {
@@ -960,6 +967,8 @@ public class Main extends JFrame {
 				JPanel p1 = new JPanel(new FlowLayout());
 				JPanel p2 = new JPanel(new FlowLayout());
 				JPanel panel = new JPanel(new BorderLayout(10,10));
+                JButton okBtn = new JButton("OK");
+                JButton cancelBtn = new JButton("Cancel");
 
 				JLabel l1 = new JLabel("New Value");
 
@@ -972,10 +981,10 @@ public class Main extends JFrame {
 				p1.add(l1);
 				p1.add(jt1);
 
-				p2.add(newBtn1);
-				p2.add(newBtn3);
+				p2.add(okBtn);
+				p2.add(cancelBtn);
 
-				newBtn1.addActionListener(a -> {
+				okBtn.addActionListener(a -> {
 
 					inputedValue = jt1.getText();
 					System.out.println(inputedValue);
@@ -1021,6 +1030,7 @@ public class Main extends JFrame {
 
 					jt1.setText("");
 					inputedValue = null;
+                    removeEditFrame(userEditFrame);
 
 					b5.doClick();
 
@@ -1037,22 +1047,23 @@ public class Main extends JFrame {
 				userEditFrame.setSize(300,200);
 				userEditFrame.setResizable(false);
 				userEditFrame.setVisible(true);
-				userEditFrame.setLocation(1400,250);
+				userEditFrame.setLocation(1350,250);
 				userEditFrame.add(panel);
 
-				newBtn3.addActionListener( b3e -> {
+				cancelBtn.addActionListener( b3e -> {
+                    table.clearSelection();
 					userEditFrame.dispose();
 				});
 
 
 
-				newBtn1.setPreferredSize(new Dimension(100,50));
-				newBtn3.setPreferredSize(new Dimension(100,50));
+				okBtn.setPreferredSize(new Dimension(100,50));
+				cancelBtn.setPreferredSize(new Dimension(100,50));
 
 
-				newBtn1.setBackground(Color.WHITE);
-				newBtn2.setBackground(Color.WHITE);
-				newBtn3.setBackground(Color.WHITE);
+				okBtn.setBackground(Color.WHITE);
+
+				cancelBtn.setBackground(Color.WHITE);
 
 				b2.addActionListener(e2 ->{removeEditFrame(userEditFrame);});
 				b3.addActionListener(e2 ->{removeEditFrame(userEditFrame);});
@@ -1126,6 +1137,7 @@ public class Main extends JFrame {
 	void removeEditFrame(JFrame frame){
 		frame.dispose();
 	}
+
 
 	public static void main(String[] args) {
 		Main frame = new Main();
