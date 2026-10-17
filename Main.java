@@ -1897,6 +1897,7 @@ public class Main extends JFrame {
                 pty.setBackground(bgcolor);
                 ptp.setBackground(bgcolor);
                 ptpw.setBackground(bgcolor);
+                //hello
 
                 save.addActionListener(se -> {
                     pMainPanel.add(bEdit);
