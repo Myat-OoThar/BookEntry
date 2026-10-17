@@ -423,7 +423,7 @@ public class Main extends JFrame {
                             se2.printStackTrace();
                         }//catch
                     }//else
-                    bBookEntry.setVisible(true);
+
                     b1.doClick();
                     bookentry.dispose();
 
@@ -814,7 +814,7 @@ public class Main extends JFrame {
                             se2.printStackTrace();
                         }//catch
                     }//else
-                    bMemberEntry.setVisible(true);
+
                     b2.doClick();
                     memberentry.dispose();
 
@@ -850,13 +850,13 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
-            pMainPanel.remove(bBorrowEntry);
+            pMainPanel.remove(bReturnEntry);
             pMainPanel.remove(bMemberEntry);
             pMainPanel.remove(bLibrarianEntry);
             pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
-            pMainPanel.add(bReturnEntry);
+            pMainPanel.add(bBorrowEntry);
             bBookEntry.setVisible(false);
             // creating table for data outputs
             String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date","Return Date"};
@@ -1194,7 +1194,7 @@ public class Main extends JFrame {
                             se2.printStackTrace();
                         }//catch
                     }//else
-                    bBorrowEntry.setVisible(true);
+
                     b3.doClick();
                     borrowentry.dispose();
 
@@ -1553,7 +1553,7 @@ public class Main extends JFrame {
                             se2.printStackTrace();
                         }//catch
                     }//else
-                    bReturnEntry.setVisible(true);
+
                     b4.doClick();
                     returnentry.dispose();
 
@@ -1714,7 +1714,7 @@ public class Main extends JFrame {
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         Connection connection = DriverManager.getConnection(url, user, password);
-                        String usersql = "UPDATE BookList SET " + columnName + " = ? WHERE userId = ?";
+                        String usersql = "UPDATE users SET " + columnName + " = ? WHERE userId = ?";
 
                         PreparedStatement ps = connection.prepareStatement(usersql);
                         ps.setObject(1, inputedValue);
@@ -1741,7 +1741,7 @@ public class Main extends JFrame {
                 });
 
 
-                userEditFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                userEditFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 userEditFrame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -1796,7 +1796,7 @@ public class Main extends JFrame {
                 JTextField tphone = new JTextField(20);
                 JTextField trole = new JTextField(20);
                 JTextField tpassword = new JTextField(20);
-                JButton save = new JButton("Save Book");
+                JButton save = new JButton("Save");
                 JButton cancel = new JButton("Cancel");
                 JPanel pmain = new JPanel(new BorderLayout());
                 JPanel p1 = new JPanel(new GridLayout(5, 2));
@@ -1912,8 +1912,8 @@ public class Main extends JFrame {
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
-                            String sqlInsert = "insert into users(userName,email,phone,role) values('"+tnameText+"','"+temailText+"','"+tphoneText+"','"+troleText+"','"+tpasswordText+"')";
+                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                            String sqlInsert = "insert into users(userName,email,phone,role,password) values('"+tnameText+"','"+temailText+"','"+tphoneText+"','"+troleText+"','"+tpasswordText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
                             connection.close();
@@ -1935,7 +1935,7 @@ public class Main extends JFrame {
                             se2.printStackTrace();
                         }//catch
                     }//else
-                    bLibrarianEntry.setVisible(true);
+
                     b5.doClick();
                     librarianentry.dispose();
 
@@ -1961,12 +1961,9 @@ public class Main extends JFrame {
         }
     }
 
-
     public void clickB1() {
         b1.doClick();
     }
-
-
 
     public Main() {
 
@@ -2022,10 +2019,8 @@ public class Main extends JFrame {
         frame.dispose();
     }
 
-
     public static void main(String[] args) {
         Main frame = new Main();
-
         frame.setTitle("Library Management System");
         frame.setSize(800, 600);
         frame.setResizable(false);
@@ -2034,6 +2029,5 @@ public class Main extends JFrame {
         frame.setVisible(true);
 
     }
-
 }
 
