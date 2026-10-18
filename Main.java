@@ -402,9 +402,15 @@ public class Main extends JFrame {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
-                            String sqlInsert = "insert into BookList(bookTitle,author,publisher,publishYear) values('"+bname+"','"+aname+"','"+pname+"','"+pyear+"')";
-                            PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
-                            pstatement.executeUpdate();
+                
+                    String sqlInsert = "INSERT INTO BookList(bookTitle, author, publisher, publishYear) VALUES (?, ?, ?, ?)";
+                    PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
+                    pstatement.setString(1, bname);
+                    pstatement.setString(2, aname);
+                    pstatement.setString(3, pname);
+                    pstatement.setString(4, pyear);
+                    pstatement.executeUpdate();
+ 
                             connection.close();
 
 
@@ -438,7 +444,7 @@ public class Main extends JFrame {
                 pmain.add(p1,BorderLayout.CENTER);
                 pmain.add(p2,BorderLayout.SOUTH);
                 bookentry.add(pmain);
-                bookentry.add(pmain);
+                
                 bookentry.setLocation(1350,400);
                 bookentry.setSize(500,300);
                 bookentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
