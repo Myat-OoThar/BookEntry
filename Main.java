@@ -43,6 +43,11 @@ public class Main extends JFrame {
     JButton b5 = new JButton("Librarian");
     JButton b6 = new JButton("Setting");
     JButton bEdit = new JButton("Replace");
+    JButton deleteBook = new JButton("Delete");
+    JButton deleteBorrow = new JButton("Delete");
+    JButton deleteMember = new JButton("Delete");
+    JButton deleteReturn = new JButton("Delete");
+    JButton deleteLibrarian = new JButton("Delete");
     JButton bBookEntry = new JButton("Add new Book");
     JButton bMemberEntry = new JButton("Add new Member");
     JButton bBorrowEntry = new JButton("Add new Borrow");
@@ -84,8 +89,21 @@ public class Main extends JFrame {
             pMainPanel.remove(bReturnEntry);
             pMainPanel.remove(bLibrarianEntry);
             pMainPanel.remove(bMemberEntry);
+
             pMainPanel.add(bEdit);
+            pMainPanel.add(deleteBook);
             pMainPanel.add(bBookEntry);
+
+            deleteBook.setVisible(false);
+            deleteMember.setVisible(false);
+            deleteBorrow.setVisible(false);
+            deleteReturn.setVisible(false);
+            deleteLibrarian.setVisible(false);
+
+
+
+
+
 
             // creating table for data outputs
             String[] columns = {"Book ID","Book Title","Author Name","Publisher","Year"};
@@ -106,6 +124,8 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    deleteBook.setVisible(true);
+
 
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
@@ -126,10 +146,26 @@ public class Main extends JFrame {
                 }
             });
 
+            deleteBook.addActionListener(be-> {
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    String sqlDelete = "DELETE FROM BookList WHERE bookID = "+bookId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
+                    PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
 
+                    pstatement.executeUpdate();
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                b1.doClick();
 
 
+            });
 
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -473,7 +509,14 @@ public class Main extends JFrame {
             pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
+            pMainPanel.add(deleteMember);
             pMainPanel.add(bMemberEntry);
+
+            deleteBook.setVisible(false);
+            deleteMember.setVisible(false);
+            deleteBorrow.setVisible(false);
+            deleteReturn.setVisible(false);
+            deleteLibrarian.setVisible(false);
 
             bBookEntry.setVisible(false);
             // creating table for data outputs
@@ -534,6 +577,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    deleteMember.setVisible(true);
 
 
                     selectedRow = table.rowAtPoint(e.getPoint());
@@ -549,6 +593,27 @@ public class Main extends JFrame {
                         System.out.println("Value: " + selectedValue);
                     }
                 }
+            });
+
+            deleteMember.addActionListener(be-> {
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    String sqlDelete = "DELETE FROM members WHERE memberId = "+memberId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
+                    PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
+
+
+                    pstatement.executeUpdate();
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                b2.doClick();
+
+
             });
 
             bEdit.addActionListener(be -> {
@@ -862,8 +927,14 @@ public class Main extends JFrame {
             pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
+            pMainPanel.add(deleteBorrow);
             pMainPanel.add(bBorrowEntry);
-            bBookEntry.setVisible(false);
+
+            deleteBook.setVisible(false);
+            deleteMember.setVisible(false);
+            deleteBorrow.setVisible(false);
+            deleteReturn.setVisible(false);
+            deleteLibrarian.setVisible(false);
             // creating table for data outputs
             String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date","Return Date"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
@@ -921,6 +992,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    deleteBorrow.setVisible(true);
 
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
@@ -935,6 +1007,27 @@ public class Main extends JFrame {
                         System.out.println("Value: " + selectedValue);
                     }
                 }
+            });
+
+            deleteBorrow.addActionListener(be-> {
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    String sqlDelete = "DELETE FROM borrows WHERE borrowId = "+borrowId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
+                    PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
+
+
+                    pstatement.executeUpdate();
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                b3.doClick();
+
+
             });
 
             bEdit.addActionListener(be -> {
@@ -1241,8 +1334,14 @@ public class Main extends JFrame {
             pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
+            pMainPanel.add(deleteReturn);
             pMainPanel.add(bReturnEntry);
-            bBookEntry.setVisible(false);
+
+            deleteBook.setVisible(false);
+            deleteMember.setVisible(false);
+            deleteBorrow.setVisible(false);
+            deleteReturn.setVisible(false);
+            deleteLibrarian.setVisible(false);
             // creating table for data outputs
             String[] columns = {"Return ID","Borrow ID","Return Date","Fine"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
@@ -1298,6 +1397,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    deleteReturn.setVisible(true);
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
 
@@ -1310,6 +1410,27 @@ public class Main extends JFrame {
                         System.out.println("Value: " + selectedValue);
                     }
                 }
+            });
+
+            deleteReturn.addActionListener(be-> {
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    String sqlDelete = "DELETE FROM returns WHERE returnId = "+returnId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
+                    PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
+
+
+                    pstatement.executeUpdate();
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                b4.doClick();
+
+
             });
 
             bEdit.addActionListener(be -> {
@@ -1600,7 +1721,14 @@ public class Main extends JFrame {
             pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
+            pMainPanel.add(deleteLibrarian);
             pMainPanel.add(bLibrarianEntry);
+
+            deleteBook.setVisible(false);
+            deleteMember.setVisible(false);
+            deleteBorrow.setVisible(false);
+            deleteReturn.setVisible(false);
+            deleteLibrarian.setVisible(false);
 
             // creating table for data outputs
             String[] columns = {"User ID","User Name","Email","Phone","Role"};
@@ -1656,6 +1784,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    deleteLibrarian.setVisible(true);
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
                     userId = (int) table.getValueAt(selectedRow, 0);
@@ -1669,6 +1798,27 @@ public class Main extends JFrame {
                         System.out.println("Value: " + selectedValue);
                     }
                 }
+            });
+
+            deleteLibrarian.addActionListener(be-> {
+
+                try{
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    String sqlDelete = "DELETE FROM users WHERE userId = "+userId;
+                    PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
+
+
+                    pstatement.executeUpdate();
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                b5.doClick();
+
+
             });
 
             bEdit.addActionListener(be -> {
@@ -1903,7 +2053,7 @@ public class Main extends JFrame {
                 pty.setBackground(bgcolor);
                 ptp.setBackground(bgcolor);
                 ptpw.setBackground(bgcolor);
-                //hello
+
 
                 save.addActionListener(se -> {
                     pMainPanel.add(bEdit);
@@ -1968,9 +2118,7 @@ public class Main extends JFrame {
         }
     }
 
-    public void clickB1() {
-        b1.doClick();
-    }
+
 
     public Main() {
 
