@@ -20,14 +20,17 @@ public class Main extends JFrame {
     String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
     String port = "10007";
     String database = "project";
-    String user = "avnadmin";//avnadmin
-    String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
+    //String user = "avnadmin";//avnadmin
+    //String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
     //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
-    String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";
+    //String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
+    String url = "jdbc:mysql://localhost:3306/project_copy";//local
+    String user = "root";
+    String password = "694737";
 
     JPanel pTop = new JPanel();
     JPanel pBottom = new JPanel(new GridLayout(1,3));
-    JPanel pMenu = new JPanel(new GridLayout(7, 1));
+    JPanel pMenu = new JPanel(new GridLayout(6, 1));
     JPanel pMain = new JPanel(new BorderLayout());
     JPanel pMainPanel = new JPanel();
     JPanel panel = new JPanel(new BorderLayout());
@@ -41,8 +44,8 @@ public class Main extends JFrame {
     JButton b3 = new JButton("Borrows");
     JButton b4 = new JButton("Returns");
     JButton b5 = new JButton("Librarian");
-    JButton b6 = new JButton("Setting");
-    JButton bEdit = new JButton("Replace");
+    //JButton b6 = new JButton("Setting");
+    JButton bEdit = new JButton("Rename");
     JButton deleteBook = new JButton("Delete");
     JButton deleteBorrow = new JButton("Delete");
     JButton deleteMember = new JButton("Delete");
@@ -158,7 +161,7 @@ public class Main extends JFrame {
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    Connection connection = DriverManager.getConnection(url, user, password);
                     String sqlDelete = "DELETE FROM BookList WHERE bookID = "+bookId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
                     PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
@@ -237,7 +240,7 @@ public class Main extends JFrame {
 
                 okButton.addActionListener(a -> {
 //                    pMainPanel.add(bBookEntry);
-                    bEdit.setVisible(true);
+                    bEdit.setVisible(false);
                     bBookEntry.setVisible(true);
 
                     inputedValue = jt1.getText();
@@ -305,7 +308,7 @@ public class Main extends JFrame {
                 cancelButton.addActionListener( b3e -> {
                    // pMainPanel.add(bBookEntry);
                     bBookEntry.setVisible(true);
-                    bEdit.setVisible(true);
+                    bEdit.setVisible(false);
                     table.clearSelection();
                     bookEditFrame.dispose();
                 });
@@ -457,7 +460,7 @@ public class Main extends JFrame {
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
+                            Connection connection = DriverManager.getConnection(url, user, password);
                 
                     String sqlInsert = "INSERT INTO BookList(bookTitle, author, publisher, publishYear) VALUES (?, ?, ?, ?)";
                     PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
@@ -627,7 +630,7 @@ public class Main extends JFrame {
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    Connection connection = DriverManager.getConnection(url, user, password);
                     String sqlDelete = "DELETE FROM members WHERE memberId = "+memberId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
                     PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
@@ -905,7 +908,7 @@ public class Main extends JFrame {
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
+                            Connection connection = DriverManager.getConnection(url, user, password);
                             String sqlInsert = "insert into members(memberName,phone,email,address,registrationDate) values('"+name+"','"+phone+"','"+email+"','"+address+"','"+date+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
@@ -1065,7 +1068,7 @@ public class Main extends JFrame {
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    Connection connection = DriverManager.getConnection(url, user, password);
                     String sqlDelete = "DELETE FROM borrows WHERE borrowId = "+borrowId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
                     PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
@@ -1325,7 +1328,7 @@ public class Main extends JFrame {
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
+                            Connection connection = DriverManager.getConnection(url, user, password);
                             String sqlInsert = "insert into borrows(bookID,memberId,borrowDate,dueDate,returnDate) values('"+tbookIdText+"','"+tmemberIdText+"','"+tborrowDateText+"','"+tdueDateText+"','"+treturnDateText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
@@ -1480,7 +1483,7 @@ public class Main extends JFrame {
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    Connection connection = DriverManager.getConnection(url, user, password);
                     String sqlDelete = "DELETE FROM returns WHERE returnId = "+returnId;//"DELETE FROM "+table+" WHERE "+rowIdName+" = "+id;
                     PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
@@ -1725,7 +1728,7 @@ public class Main extends JFrame {
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED", "avnadmin", "AVNS_Z5VaWvb_pxjqBMtks36");
+                            Connection connection = DriverManager.getConnection(url, user, password);
                             String sqlInsert = "insert into returns(borrowId,returnDate,fine) values('"+tborrowIdText+"','"+treturnDateText+"','"+tfineText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
@@ -1880,7 +1883,7 @@ public class Main extends JFrame {
 
                 try{
                     Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                    Connection connection = DriverManager.getConnection(url, user, password);
                     String sqlDelete = "DELETE FROM users WHERE userId = "+userId;
                     PreparedStatement pstatement = connection.prepareStatement(sqlDelete);
 
@@ -2021,13 +2024,13 @@ public class Main extends JFrame {
                 JLabel email = new JLabel("Email");
                 JLabel phone = new JLabel("Phone");
                 JLabel role = new JLabel("Role");
-                JLabel password = new JLabel("Password");
+                JLabel passwordLabel = new JLabel("Password");
 
                 JTextField tname = new JTextField(20);
                 JTextField temail = new JTextField(20);
                 JTextField tphone = new JTextField(20);
                 JTextField trole = new JTextField(20);
-                JTextField tpassword = new JTextField(20);
+                JTextField tpasswordLabel = new JTextField(20);
                 JButton save = new JButton("Save");
                 JButton cancel = new JButton("Cancel");
                 JPanel pmain = new JPanel(new BorderLayout());
@@ -2039,7 +2042,7 @@ public class Main extends JFrame {
                 email.setFont(myFont);
                 phone.setFont(myFont);
                 role.setFont(myFont);
-                password.setFont(myFont);
+                passwordLabel.setFont(myFont);
 
                 Color fontColor = new Color(32, 32, 32);
                 //setting labels fonts color
@@ -2047,14 +2050,14 @@ public class Main extends JFrame {
                 email.setForeground(fontColor);
                 phone.setForeground(fontColor);
                 role.setForeground(fontColor);
-                password.setForeground(fontColor);
+                passwordLabel.setForeground(fontColor);
 
                 //setting size of text field box
                 tname.setPreferredSize(new Dimension(20, 30));
                 temail.setPreferredSize(new Dimension(20, 30));
                 tphone.setPreferredSize(new Dimension(20, 30));
                 trole.setPreferredSize(new Dimension(20, 30));
-                tpassword.setPreferredSize(new Dimension(20, 30));
+                tpasswordLabel.setPreferredSize(new Dimension(20, 30));
 
                 // for alignment of label and text fields
                 LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 5, 10);
@@ -2069,7 +2072,7 @@ public class Main extends JFrame {
                 pla.add(email);
                 ply.add(phone);
                 plp.add(role);
-                plpw.add(password);
+                plpw.add(passwordLabel);
 
                 //setting text field panels alignments
                 JPanel ptb = new JPanel(layout);
@@ -2082,7 +2085,7 @@ public class Main extends JFrame {
                 pta.add(temail);
                 pty.add(tphone);
                 ptp.add(trole);
-                ptpw.add(tpassword);
+                ptpw.add(tpasswordLabel);
 
                 //adding small panels into main GridLayout panel
                 p1.add(plb);
@@ -2138,14 +2141,14 @@ public class Main extends JFrame {
                     String temailText = temail.getText();
                     String tphoneText = tphone.getText();
                     String troleText = trole.getText();
-                    String tpasswordText = tpassword.getText();
+                    String tpasswordText = tpasswordLabel.getText();
 
                     if(tnameText.equals("") || temailText.equals("") || tphoneText.equals("") || troleText.equals("") || tpasswordText.equals("")) {
                         JOptionPane.showMessageDialog(null, "You should input first!");
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
-                            Connection connection = DriverManager.getConnection("jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED");
+                            Connection connection = DriverManager.getConnection(url, user, password);
                             String sqlInsert = "insert into users(userName,email,phone,role,password) values('"+tnameText+"','"+temailText+"','"+tphoneText+"','"+troleText+"','"+tpasswordText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
@@ -2157,7 +2160,7 @@ public class Main extends JFrame {
                             temail.setText("");
                             tphone.setText("");
                             trole.setText("");
-                            tpassword.setText("");
+                            tpasswordLabel.setText("");
 
                         }//try
                         catch(ClassNotFoundException e1){
@@ -2217,7 +2220,7 @@ public class Main extends JFrame {
         pMenu.add(b3);
         pMenu.add(b4);
         pMenu.add(b5);
-        pMenu.add(b6);
+        //pMenu.add(b6);
 
         pMainPanel.add(bBookEntry);
         pMainPanel.add(bMemberEntry);
