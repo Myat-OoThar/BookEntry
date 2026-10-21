@@ -85,14 +85,14 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
-            pMainPanel.remove(bBorrowEntry);
-            pMainPanel.remove(bReturnEntry);
-            pMainPanel.remove(bLibrarianEntry);
-            pMainPanel.remove(bMemberEntry);
+//            pMainPanel.remove(bBorrowEntry);
+//            pMainPanel.remove(bReturnEntry);
+//            pMainPanel.remove(bLibrarianEntry);
+//            pMainPanel.remove(bMemberEntry);
 
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteBook);
-            pMainPanel.add(bBookEntry);
+//            pMainPanel.add(bBookEntry);
 
             deleteBook.setVisible(false);
             deleteMember.setVisible(false);
@@ -100,6 +100,13 @@ public class Main extends JFrame {
             deleteReturn.setVisible(false);
             deleteLibrarian.setVisible(false);
 
+            bEdit.setVisible(false);
+
+            bBookEntry.setVisible(true);
+            bMemberEntry.setVisible(false);
+            bBorrowEntry.setVisible(false);
+            bReturnEntry.setVisible(false);
+            bLibrarianEntry.setVisible(false);
 
 
 
@@ -125,6 +132,7 @@ public class Main extends JFrame {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     deleteBook.setVisible(true);
+                    bEdit.setVisible(true);
 
 
                     selectedRow = table.rowAtPoint(e.getPoint());
@@ -200,10 +208,11 @@ public class Main extends JFrame {
                 ce.printStackTrace();
 
             }//catch
-            bEdit.setVisible(true);
+
 
             bEdit.addActionListener(be -> {
-                pMainPanel.remove(bBookEntry);
+//                pMainPanel.remove(bBookEntry);
+                bBookEntry.setVisible(false);
                 bEdit.setVisible(false);
                 JFrame bookEditFrame = new JFrame("Book Edit Frame");
                 JPanel p1 = new JPanel(new FlowLayout());
@@ -227,7 +236,9 @@ public class Main extends JFrame {
                 p2.add(cancelButton);
 
                 okButton.addActionListener(a -> {
-                    pMainPanel.add(bBookEntry);
+//                    pMainPanel.add(bBookEntry);
+                    bEdit.setVisible(true);
+                    bBookEntry.setVisible(true);
 
                     inputedValue = jt1.getText();
                     System.out.println(inputedValue);
@@ -282,8 +293,7 @@ public class Main extends JFrame {
                 bookEditFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 bookEditFrame.addWindowListener(new WindowAdapter() {
                     @Override
-                    public void windowClosed(WindowEvent e) {
-                        bEdit.setVisible(true);
+                    public void windowClosed(WindowEvent e) {bEdit.setVisible(true);
                     }
                 });
                 bookEditFrame.setSize(300,200);
@@ -293,7 +303,9 @@ public class Main extends JFrame {
                 bookEditFrame.add(panel);
 
                 cancelButton.addActionListener( b3e -> {
-                    pMainPanel.add(bBookEntry);
+                   // pMainPanel.add(bBookEntry);
+                    bBookEntry.setVisible(true);
+                    bEdit.setVisible(true);
                     table.clearSelection();
                     bookEditFrame.dispose();
                 });
@@ -321,10 +333,16 @@ public class Main extends JFrame {
             });
 
             bBookEntry.addActionListener( be2 -> {
-                pMainPanel.remove(bEdit);
-                pMainPanel.remove(bBookEntry);
+//                pMainPanel.remove(bEdit);
+//                pMainPanel.remove(bBookEntry);
+                bEdit.setVisible(false);
+                bBookEntry.setVisible(false);
                 JFrame bookentry = new JFrame();
                 bookentry.setTitle("Book Entry");
+                bookentry.setLocation(1350,400);
+                bookentry.setSize(500,300);
+                bookentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                bookentry.setVisible(true);
                 JLabel lbname = new JLabel("Book Name");
                 JLabel laname = new JLabel("Author Name");
                 JLabel lpyear = new JLabel("Publish Year");
@@ -425,8 +443,10 @@ public class Main extends JFrame {
                 ptp.setBackground(bgcolor);
 
                 save.addActionListener(se -> {
-                    pMainPanel.add(bEdit);
-                    pMainPanel.add(bBookEntry);
+//                    pMainPanel.add(bEdit);
+//                    pMainPanel.add(bBookEntry);
+                    bEdit.setVisible(true);
+                    bBookEntry.setVisible(true);
                     String bname = tbname.getText();
                     String aname = taname.getText();
                     String pyear = tpyear.getText();
@@ -473,21 +493,20 @@ public class Main extends JFrame {
                 });
 
                 cancel.addActionListener(ce -> {
-                    pMainPanel.add(bEdit);
-                    pMainPanel.add(bBookEntry);
+
+                    bEdit.setVisible(true);
+                    bBookEntry.setVisible(true);
                     bookentry.dispose();
+
                 });
                 pmain.add(p1,BorderLayout.CENTER);
                 pmain.add(p2,BorderLayout.SOUTH);
                 bookentry.add(pmain);
                 
-                bookentry.setLocation(1350,400);
-                bookentry.setSize(500,300);
-                bookentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                bookentry.setVisible(true);
+
 
             });
-            bBookEntry.setVisible(true);
+
 
         }
 
@@ -503,14 +522,14 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
-            pMainPanel.remove(bBorrowEntry);
-            pMainPanel.remove(bReturnEntry);
-            pMainPanel.remove(bLibrarianEntry);
-            pMainPanel.remove(bBookEntry);
+//            pMainPanel.remove(bBorrowEntry);
+//            pMainPanel.remove(bReturnEntry);
+//            pMainPanel.remove(bLibrarianEntry);
+//            pMainPanel.remove(bBookEntry);
 
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteMember);
-            pMainPanel.add(bMemberEntry);
+//            pMainPanel.add(bMemberEntry);
 
             deleteBook.setVisible(false);
             deleteMember.setVisible(false);
@@ -518,7 +537,15 @@ public class Main extends JFrame {
             deleteReturn.setVisible(false);
             deleteLibrarian.setVisible(false);
 
+            bEdit.setVisible(false);
+
             bBookEntry.setVisible(false);
+            bMemberEntry.setVisible(true);
+            bBorrowEntry.setVisible(false);
+            bReturnEntry.setVisible(false);
+            bLibrarianEntry.setVisible(false);
+
+
             // creating table for data outputs
             String[] columns = {"Member ID","Name","Phone Number","Email","Address","Registration Date"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
@@ -577,6 +604,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    bEdit.setVisible(true);
                     deleteMember.setVisible(true);
 
 
@@ -618,6 +646,7 @@ public class Main extends JFrame {
 
             bEdit.addActionListener(be -> {
                 bEdit.setVisible(false);
+                bMemberEntry.setVisible(false);
                 JFrame memberEditFrame = new JFrame("Member Edit Frame");
 
                 JPanel p1 = new JPanel(new FlowLayout());
@@ -642,6 +671,8 @@ public class Main extends JFrame {
                 p2.add(cancelBtn);
 
                 okBtn.addActionListener(a -> {
+                    bEdit.setVisible(true);
+                    bMemberEntry.setVisible(true);
 
                     inputedValue = jt1.getText();
                     System.out.println(inputedValue);
@@ -702,8 +733,7 @@ public class Main extends JFrame {
                 memberEditFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                 memberEditFrame.addWindowListener(new WindowAdapter() {
                     @Override
-                    public void windowClosed(WindowEvent e) {
-                        bEdit.setVisible(true);
+                    public void windowClosed(WindowEvent e) {bEdit.setVisible(true);
                     }
                 });
                 memberEditFrame.setSize(300,200);
@@ -713,6 +743,8 @@ public class Main extends JFrame {
                 memberEditFrame.add(panel);
 
                 cancelBtn.addActionListener( b3e -> {
+                    bEdit.setVisible(true);
+                    bMemberEntry.setVisible(true);
                     table.clearSelection();
                     memberEditFrame.dispose();
                 });
@@ -740,8 +772,14 @@ public class Main extends JFrame {
             });
 
             bMemberEntry.addActionListener( be2 -> {
+                bEdit.setVisible(false);
+                bMemberEntry.setVisible(false);
                 JFrame memberentry = new JFrame();
                 memberentry.setTitle("Member Entry");
+                memberentry.setLocation(1350,400);
+                memberentry.setSize(550,300);
+                memberentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                memberentry.setVisible(true);
                 JLabel membername = new JLabel("Member Name");
                 JLabel memberphone = new JLabel("Phone Number");
                 JLabel memberemail = new JLabel("Email");
@@ -854,6 +892,8 @@ public class Main extends JFrame {
                 ptp.setBackground(bgcolor);
 
                 save.addActionListener(se -> {
+                    bEdit.setVisible(true);
+                    bMemberEntry.setVisible(true);
                     String name = tmembername.getText();
                     String phone = tmemberphone.getText();
                     String email = tmemberemail.getText();
@@ -893,6 +933,8 @@ public class Main extends JFrame {
                 });
 
                 cancel.addActionListener(ce -> {
+                    bEdit.setVisible(true);
+                    bMemberEntry.setVisible(true);
                     memberentry.dispose();
                 });
 
@@ -900,15 +942,14 @@ public class Main extends JFrame {
                 pmain.add(p2,BorderLayout.SOUTH);
                 memberentry.add(pmain);
                 memberentry.add(pmain);
-                memberentry.setLocation(1350,400);
-                memberentry.setSize(550,300);
-                memberentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                memberentry.setVisible(true);
+
 
             });
 
 
+
         }
+
     }
 
     class ShowBorrow implements ActionListener{
@@ -921,20 +962,30 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
-            pMainPanel.remove(bReturnEntry);
-            pMainPanel.remove(bMemberEntry);
-            pMainPanel.remove(bLibrarianEntry);
-            pMainPanel.remove(bBookEntry);
+//            pMainPanel.remove(bReturnEntry);
+//            pMainPanel.remove(bMemberEntry);
+//            pMainPanel.remove(bLibrarianEntry);
+//            pMainPanel.remove(bBookEntry);
 
+            pMainPanel.add(bBorrowEntry);
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteBorrow);
-            pMainPanel.add(bBorrowEntry);
+
 
             deleteBook.setVisible(false);
             deleteMember.setVisible(false);
             deleteBorrow.setVisible(false);
             deleteReturn.setVisible(false);
             deleteLibrarian.setVisible(false);
+
+            bEdit.setVisible(false);
+
+            bBookEntry.setVisible(false);
+            bMemberEntry.setVisible(false);
+            bBorrowEntry.setVisible(true);
+            bReturnEntry.setVisible(false);
+            bLibrarianEntry.setVisible(false);
+
             // creating table for data outputs
             String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date","Return Date"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
@@ -992,6 +1043,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    bEdit.setVisible(true);
                     deleteBorrow.setVisible(true);
 
                     selectedRow = table.rowAtPoint(e.getPoint());
@@ -1316,6 +1368,7 @@ public class Main extends JFrame {
             });
 
 
+
         }
     }
 
@@ -1328,20 +1381,30 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
-            pMainPanel.remove(bBorrowEntry);
-            pMainPanel.remove(bMemberEntry);
-            pMainPanel.remove(bLibrarianEntry);
-            pMainPanel.remove(bBookEntry);
+//            pMainPanel.remove(bBorrowEntry);
+//            pMainPanel.remove(bMemberEntry);
+//            pMainPanel.remove(bLibrarianEntry);
+//            pMainPanel.remove(bBookEntry);
 
+            pMainPanel.add(bReturnEntry);
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteReturn);
-            pMainPanel.add(bReturnEntry);
+
 
             deleteBook.setVisible(false);
             deleteMember.setVisible(false);
             deleteBorrow.setVisible(false);
             deleteReturn.setVisible(false);
             deleteLibrarian.setVisible(false);
+
+            bEdit.setVisible(false);
+
+            bBookEntry.setVisible(false);
+            bMemberEntry.setVisible(false);
+            bBorrowEntry.setVisible(false);
+            bReturnEntry.setVisible(true);
+            bLibrarianEntry.setVisible(false);
+
             // creating table for data outputs
             String[] columns = {"Return ID","Borrow ID","Return Date","Fine"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
@@ -1397,6 +1460,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    bEdit.setVisible(true);
                     deleteReturn.setVisible(true);
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
@@ -1702,6 +1766,7 @@ public class Main extends JFrame {
 
             });
 
+
         }
     }
 
@@ -1715,20 +1780,30 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
-            pMainPanel.remove(bBorrowEntry);
-            pMainPanel.remove(bMemberEntry);
-            pMainPanel.remove(bReturnEntry);
-            pMainPanel.remove(bBookEntry);
+//            pMainPanel.remove(bBorrowEntry);
+//            pMainPanel.remove(bMemberEntry);
+//            pMainPanel.remove(bReturnEntry);
+//            pMainPanel.remove(bBookEntry);
 
+            pMainPanel.add(bLibrarianEntry);
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteLibrarian);
-            pMainPanel.add(bLibrarianEntry);
+
 
             deleteBook.setVisible(false);
             deleteMember.setVisible(false);
             deleteBorrow.setVisible(false);
             deleteReturn.setVisible(false);
             deleteLibrarian.setVisible(false);
+
+            bEdit.setVisible(false);
+
+            bBookEntry.setVisible(false);
+            bMemberEntry.setVisible(false);
+            bBorrowEntry.setVisible(false);
+            bReturnEntry.setVisible(false);
+            bLibrarianEntry.setVisible(true);
+
 
             // creating table for data outputs
             String[] columns = {"User ID","User Name","Email","Phone","Role"};
@@ -1784,6 +1859,7 @@ public class Main extends JFrame {
             table.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    bEdit.setVisible(true);
                     deleteLibrarian.setVisible(true);
                     selectedRow = table.rowAtPoint(e.getPoint());
                     selectedColumn = table.columnAtPoint(e.getPoint());
@@ -2115,6 +2191,7 @@ public class Main extends JFrame {
 
             });
 
+
         }
     }
 
@@ -2141,6 +2218,18 @@ public class Main extends JFrame {
         pMenu.add(b4);
         pMenu.add(b5);
         pMenu.add(b6);
+
+        pMainPanel.add(bBookEntry);
+        pMainPanel.add(bMemberEntry);
+        pMainPanel.add(bBorrowEntry);
+        pMainPanel.add(bReturnEntry);
+        pMainPanel.add(bLibrarianEntry);
+
+        bBookEntry.setVisible(false);
+        bMemberEntry.setVisible(false);
+        bBorrowEntry.setVisible(false);
+        bReturnEntry.setVisible(false);
+        bLibrarianEntry.setVisible(false);
 
 
         pBottom.add(login,BorderLayout.WEST);
