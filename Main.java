@@ -17,13 +17,13 @@ import java.time.format.DateTimeFormatter;
 public class Main extends JFrame {
 
 
-    String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
-    String port = "10007";
-    String database = "project";
-    //String user = "avnadmin";//avnadmin
-    //String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
+//    String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
+//    String port = "10007";
+//    String database = "project";
+//    String user = "avnadmin";//avnadmin
+//    String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
     //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
-    //String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
+ //   String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
     String url = "jdbc:mysql://localhost:3306/project_copy";//local
     String user = "root";
     String password = "694737";
@@ -76,6 +76,22 @@ public class Main extends JFrame {
     int returnId;
     int userId;
 
+    String[] categories = {
+            "All",
+            "programming",
+            "mathematic",
+            "history"
+    };
+
+    JComboBox<String> categoryBox = new JComboBox<>(categories);
+
+    String selectedBox;
+
+    JTextField searchField = new JTextField(15);
+    JButton searchButton = new JButton("Search");
+
+    JPanel searchPanel = new JPanel();
+
 
     class ShowBookList implements ActionListener{
 
@@ -88,10 +104,23 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
+
+
+            categoryBox.addActionListener(ce -> {
+                selectedBox = (String) categoryBox.getSelectedItem();
+                System.out.println("Selected Box: "+selectedBox);
+                b1.doClick();
+            });
+
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bReturnEntry);
 //            pMainPanel.remove(bLibrarianEntry);
 //            pMainPanel.remove(bMemberEntry);
+
+
+
+            pMainPanel.add(categoryBox);
+
 
             pMainPanel.add(bEdit);
             pMainPanel.add(deleteBook);
@@ -115,8 +144,10 @@ public class Main extends JFrame {
 
 
 
+
+
             // creating table for data outputs
-            String[] columns = {"Book ID","Book Title","Author Name","Publisher","Year"};
+            String[] columns = {"Book ID","Book Title","Author Name","Publisher","Year", "Category"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
             JTable table = new JTable(model);
             table.setRowHeight(25);
@@ -185,6 +216,17 @@ public class Main extends JFrame {
                 System.out.println("Database connected");
                 Statement statement = connection.createStatement();
                 String sqlSelect = "select * from BookList";
+//                if(selectedBox == "All"){
+//                    sqlSelect = "select * from BookList";
+//                }else
+                if(selectedBox == "programming"){
+                    sqlSelect = "select * from BookList where Category = 'programming'";
+                }else if(selectedBox == "mathematic"){
+                    sqlSelect = "select * from BookList where Category = 'mathematic'";
+                }else if(selectedBox == "history"){
+                    sqlSelect = "select * from BookList where Category = 'history'";
+                }
+
                 ResultSet resultSet = statement.executeQuery(sqlSelect);
                 while(resultSet.next()) {
                     model.addRow(new Object[] {
@@ -192,7 +234,8 @@ public class Main extends JFrame {
                             resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getString(4),
-                            resultSet.getInt(5)
+                            resultSet.getInt(5),
+                            resultSet.getString(6)
                     });
                 }
 
@@ -251,7 +294,7 @@ public class Main extends JFrame {
                         return;
                     }
 
-                    String[] columnsql = { "bookID", "bookTitle", "author", "publisher", "publishYear" };
+                    String[] columnsql = { "bookID", "bookTitle", "author", "publisher", "publishYear", "Category" };
 
                     if (selectedColumn < 0 || selectedColumn >= columnsql.length) {
                         System.out.println("Invalid column index: " + selectedColumn);
@@ -293,7 +336,7 @@ public class Main extends JFrame {
                 });
 
 
-                bookEditFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                bookEditFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 bookEditFrame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {bEdit.setVisible(true);
@@ -350,15 +393,17 @@ public class Main extends JFrame {
                 JLabel laname = new JLabel("Author Name");
                 JLabel lpyear = new JLabel("Publish Year");
                 JLabel lpname = new JLabel("Publisher Name");
+                JLabel lcategory = new JLabel("Category");
 
                 JTextField tbname = new JTextField(20);
                 JTextField taname = new JTextField(20);
                 JTextField tpyear = new JTextField(20);
                 JTextField tpname = new JTextField(20);
+                JTextField tcategory = new JTextField(20);
                 JButton save = new JButton("Save Book");
                 JButton cancel = new JButton("Cancel");
                 JPanel pmain = new JPanel(new BorderLayout());
-                JPanel p1 = new JPanel(new GridLayout(4, 2));
+                JPanel p1 = new JPanel(new GridLayout(5, 2));
                 Font myFont = new Font("Roboto", Font.PLAIN, 20);
 
                 //setting labels fonts
@@ -366,6 +411,7 @@ public class Main extends JFrame {
                 laname.setFont(myFont);
                 lpyear.setFont(myFont);
                 lpname.setFont(myFont);
+                lcategory.setFont(myFont);
 
                 Color fontColor = new Color(32, 32, 32);
                 //setting labels fonts color
@@ -373,12 +419,14 @@ public class Main extends JFrame {
                 laname.setForeground(fontColor);
                 lpyear.setForeground(fontColor);
                 lpname.setForeground(fontColor);
+                lcategory.setForeground(fontColor);
 
                 //setting size of text field box
                 tbname.setPreferredSize(new Dimension(20, 30));
                 taname.setPreferredSize(new Dimension(20, 30));
                 tpyear.setPreferredSize(new Dimension(20, 30));
                 tpname.setPreferredSize(new Dimension(20, 30));
+                tcategory.setPreferredSize(new Dimension(20, 30));
 
                 // for alignment of label and text fields
                 LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 5, 10);
@@ -387,22 +435,27 @@ public class Main extends JFrame {
                 JPanel pla = new JPanel(layout);
                 JPanel ply = new JPanel(layout);
                 JPanel plp = new JPanel(layout);
+                JPanel pcl = new JPanel(layout);
+
                 //adding labels into aligned panels
                 plb.add(lbname);
                 pla.add(laname);
                 ply.add(lpyear);
                 plp.add(lpname);
+                pcl.add(lcategory);
 
                 //setting text field panels alignments
                 JPanel ptb = new JPanel(layout);
                 JPanel pta = new JPanel(layout);
                 JPanel pty = new JPanel(layout);
                 JPanel ptp = new JPanel(layout);
+                JPanel pct = new JPanel(layout);
                 //adding text fields into aligned panels
                 ptb.add(tbname);
                 pta.add(taname);
                 pty.add(tpyear);
                 ptp.add(tpname);
+                pct.add(tcategory);
 
                 //adding small panels into main GridLayout panel
                 p1.add(plb);
@@ -416,6 +469,9 @@ public class Main extends JFrame {
 
                 p1.add(plp);
                 p1.add(ptp);
+
+                p1.add(pcl);
+                p1.add(pct);
 
                 //creating panel for buttons
                 JPanel p2 = new JPanel(new FlowLayout());
@@ -439,11 +495,14 @@ public class Main extends JFrame {
                 pla.setBackground(bgcolor);
                 ply.setBackground(bgcolor);
                 plp.setBackground(bgcolor);
+                pcl.setBackground(bgcolor);
+
 
                 ptb.setBackground(bgcolor);
                 pta.setBackground(bgcolor);
                 pty.setBackground(bgcolor);
                 ptp.setBackground(bgcolor);
+                pct.setBackground(bgcolor);
 
                 save.addActionListener(se -> {
 //                    pMainPanel.add(bEdit);
@@ -454,20 +513,22 @@ public class Main extends JFrame {
                     String aname = taname.getText();
                     String pyear = tpyear.getText();
                     String pname = tpname.getText();
+                    String pcategory = tcategory.getText();
 
-                    if(bname.equals("") || aname.equals("") || pyear.equals("") || pname.equals("")) {
+                    if(bname.equals("") || aname.equals("") || pyear.equals("") || pname.equals("") || pcategory.equals("")) {
                         JOptionPane.showMessageDialog(null, "You should input first!");
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(url, user, password);
                 
-                    String sqlInsert = "INSERT INTO BookList(bookTitle, author, publisher, publishYear) VALUES (?, ?, ?, ?)";
+                    String sqlInsert = "INSERT INTO BookList(bookTitle, author, publisher, publishYear, Category) VALUES (?, ?, ?, ?, ?)";
                     PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                     pstatement.setString(1, bname);
                     pstatement.setString(2, aname);
                     pstatement.setString(3, pname);
                     pstatement.setString(4, pyear);
+                    pstatement.setString(5, pcategory);
                     pstatement.executeUpdate();
  
                             connection.close();
@@ -478,6 +539,7 @@ public class Main extends JFrame {
                             taname.setText("");
                             tpyear.setText("");
                             tpname.setText("");
+                            tcategory.setText("");
 
                         }//try
                         catch(ClassNotFoundException e1){
@@ -510,6 +572,52 @@ public class Main extends JFrame {
 
             });
 
+            searchButton.addActionListener(se -> {
+               String searchValue =  searchField.getText().trim();
+               System.out.println("Search value: "+searchValue);
+               if(searchValue.isEmpty()){
+                   JOptionPane.showMessageDialog(null, "You should input first!");
+               }else{
+
+                   try {
+                       Class.forName("com.mysql.cj.jdbc.Driver");
+                       System.out.println("Driver created");
+                       Connection connection = DriverManager.getConnection(url, user, password);
+                       System.out.println("Database connected");
+
+                       String sqlSearch = "select * from BookList where bookTitle like ? OR author like ?";
+                       PreparedStatement pst = connection.prepareStatement(sqlSearch);
+                       pst.setString(1,"%" + searchValue + "%");
+                       pst.setString(2, "%" + searchValue + "%");
+
+
+
+                       model.setRowCount(0);
+                       ResultSet resultSet = pst.executeQuery();
+                       while(resultSet.next()) {
+                           model.addRow(new Object[] {
+                                   resultSet.getInt(1),
+                                   resultSet.getString(2),
+                                   resultSet.getString(3),
+                                   resultSet.getString(4),
+                                   resultSet.getInt(5),
+                                   resultSet.getString(6)
+                           });
+                       }
+
+
+                       connection.close();
+                   }//try
+                   catch(SQLException se1) {
+                       se1.printStackTrace();
+                   }catch(ClassNotFoundException ce) {
+                       System.out.println("ClassNotFoundException");
+                       ce.printStackTrace();
+
+                   }//catch
+               }
+            });
+
 
         }
 
@@ -524,6 +632,7 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+            categoryBox.setVisible(false);
 
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bReturnEntry);
@@ -965,6 +1074,8 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
+            categoryBox.setVisible(false);
+
 //            pMainPanel.remove(bReturnEntry);
 //            pMainPanel.remove(bMemberEntry);
 //            pMainPanel.remove(bLibrarianEntry);
@@ -1384,6 +1495,8 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+            categoryBox.setVisible(false);
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bMemberEntry);
 //            pMainPanel.remove(bLibrarianEntry);
@@ -1782,6 +1895,8 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+            categoryBox.setVisible(false);
 
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bMemberEntry);
@@ -2202,6 +2317,11 @@ public class Main extends JFrame {
 
     public Main() {
 
+
+
+        SwingUtilities.invokeLater(() -> b1.doClick());// starting the program by showing Book Lists
+
+
         lMenu.setVerticalAlignment(SwingConstants.TOP);
         lMenu.setFont(new Font("Roboto", Font.BOLD, 15));
 
@@ -2227,6 +2347,8 @@ public class Main extends JFrame {
         pMainPanel.add(bBorrowEntry);
         pMainPanel.add(bReturnEntry);
         pMainPanel.add(bLibrarianEntry);
+
+        pMainPanel.add(categoryBox);
 
         bBookEntry.setVisible(false);
         bMemberEntry.setVisible(false);
@@ -2254,6 +2376,9 @@ public class Main extends JFrame {
         add(pBottom, BorderLayout.SOUTH);
         add(pMenu, BorderLayout.WEST);
 
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        panel.add(searchPanel,BorderLayout.NORTH);
         panel.add(pMain,BorderLayout.CENTER);
         panel.add(pMainPanel, BorderLayout.SOUTH);
         pMainPanel.setPreferredSize(new Dimension(500,40));
