@@ -88,9 +88,9 @@ public class Main extends JFrame {
 
     String selectedBox;
 
-    JTextField searchField = new JTextField();
 
-    JButton searchButton = new JButton("Search");
+
+
 
 
     JPanel searchPanel = new JPanel();
@@ -117,11 +117,17 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+
+
+            searchPanel.removeAll();
+            searchPanel.revalidate();
+            searchPanel.repaint();
             searchPanel.setVisible(true);
+            JTextField searchField = new JTextField("Search by book name or author");
+            JButton searchButton = new JButton("Search");
 
 
-
-            searchField.setText("Search by book name or author");
 
 
             searchField.addFocusListener(new FocusAdapter() {
@@ -131,6 +137,25 @@ public class Main extends JFrame {
                     searchField.setForeground(Color.BLACK);
                 }
             });
+
+            searchField.addActionListener(se -> {
+                searchButton.doClick();
+            });
+
+            searchField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        searchButton.doClick();
+                    }
+                }
+            });
+
+            searchField.setPreferredSize(new Dimension(250, 40));
+
+            searchPanel.add(searchField);
+            searchPanel.add(searchButton);
+            panel.add(searchPanel,BorderLayout.NORTH);
 
 
 
@@ -488,8 +513,8 @@ public class Main extends JFrame {
                 bBookEntry.setVisible(false);
 
 
-                bookentry.setLocation(1350,400);
-                bookentry.setSize(500,300);
+                bookentry.setLocation(1372,200);
+                bookentry.setSize(550,300);
                 bookentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 bookentry.setVisible(true);
                 JLabel lbname = new JLabel("Book Name");
@@ -751,10 +776,49 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+            searchPanel.removeAll();
+            searchPanel.revalidate();
+            searchPanel.repaint();
             searchPanel.setVisible(true);
+
+            JTextField searchField = new JTextField("Search by member name");
+            JButton searchButton = new JButton("Search");
+
+
+
+
+            searchField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
+                }
+            });
+
+            searchField.addActionListener(se -> {
+                searchButton.doClick();
+            });
+
+            searchField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        searchButton.doClick();
+                    }
+                }
+            });
+
+            searchField.setPreferredSize(new Dimension(250, 40));
+
+            searchPanel.add(searchField);
+            searchPanel.add(searchButton);
+            panel.add(searchPanel,BorderLayout.NORTH);
+
+
             categoryBox.setVisible(false);
 
-            searchField.setText("Search by member name");
+
 
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bReturnEntry);
@@ -1078,7 +1142,7 @@ public class Main extends JFrame {
                 bEdit.setVisible(false);
                 bMemberEntry.setVisible(false);
 
-                memberentry.setLocation(1350,400);
+                memberentry.setLocation(1372,550);
                 memberentry.setSize(550,300);
                 memberentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 memberentry.setVisible(true);
@@ -1261,6 +1325,52 @@ public class Main extends JFrame {
 
             });
 
+            searchButton.addActionListener(se -> {
+                String searchValue =  searchField.getText().trim();
+                System.out.println("Search value: "+searchValue);
+                if(searchValue.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "You should input first!");
+                }else{
+
+                    try {
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        System.out.println("Driver created");
+                        Connection connection = DriverManager.getConnection(url, user, password);
+                        System.out.println("Database connected");
+
+                        String sqlSearch = "select * from members where memberName like ?";
+                        PreparedStatement pst = connection.prepareStatement(sqlSearch);
+                        pst.setString(1,"%" + searchValue + "%");
+
+
+
+
+                        model.setRowCount(0);
+                        ResultSet resultSet = pst.executeQuery();
+                        while(resultSet.next()) {
+                            model.addRow(new Object[] {
+                                    resultSet.getInt(1),
+                                    resultSet.getString(2),
+                                    resultSet.getString(3),
+                                    resultSet.getString(4),
+                                    resultSet.getString(5),
+                                    resultSet.getString(6)
+                            });
+                        }
+
+
+                        connection.close();
+                    }//try
+                    catch(SQLException se1) {
+                        se1.printStackTrace();
+                    }catch(ClassNotFoundException ce) {
+                        System.out.println("ClassNotFoundException");
+                        ce.printStackTrace();
+
+                    }//catch
+                }
+            });
+
 
 
         }
@@ -1278,6 +1388,7 @@ public class Main extends JFrame {
             pMain.setLayout(new BorderLayout());
 
             searchPanel.setVisible(false);
+
 
             categoryBox.setVisible(false);
 
@@ -1759,7 +1870,7 @@ public class Main extends JFrame {
                 pmain.add(p2,BorderLayout.SOUTH);
                 borrowentry.add(pmain);
                 borrowentry.add(pmain);
-                borrowentry.setLocation(1350,400);
+                borrowentry.setLocation(-3,200);
                 borrowentry.setSize(550,300);
                 borrowentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 borrowentry.setVisible(true);
@@ -1782,6 +1893,7 @@ public class Main extends JFrame {
             pMain.setLayout(new BorderLayout());
 
             searchPanel.setVisible(false);
+
 
             categoryBox.setVisible(false);
 //            pMainPanel.remove(bBorrowEntry);
@@ -2262,7 +2374,7 @@ public class Main extends JFrame {
                 pmain.add(p2,BorderLayout.SOUTH);
                 returnentry.add(pmain);
                 returnentry.add(pmain);
-                returnentry.setLocation(1350,400);
+                returnentry.setLocation(-3,550);
                 returnentry.setSize(550,300);
                 returnentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 returnentry.setVisible(true);
@@ -2283,9 +2395,45 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
+
+            searchPanel.removeAll();
+            searchPanel.revalidate();
+            searchPanel.repaint();
             searchPanel.setVisible(true);
 
-            searchField.setText("Search by Librarian name");
+            JTextField searchField = new JTextField("Search by Librarian name");
+            JButton searchButton = new JButton("Search");
+
+
+
+
+            searchField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
+                }
+            });
+
+            searchField.addActionListener(se -> {
+                searchButton.doClick();
+            });
+
+            searchField.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        searchButton.doClick();
+                    }
+                }
+            });
+
+            searchField.setPreferredSize(new Dimension(250, 40));
+
+            searchPanel.add(searchField);
+            searchPanel.add(searchButton);
+            panel.add(searchPanel,BorderLayout.NORTH);
+
 
             categoryBox.setVisible(false);
 
@@ -2582,6 +2730,7 @@ public class Main extends JFrame {
 
 
 
+
                 librarianentry.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -2591,6 +2740,10 @@ public class Main extends JFrame {
                     }
                 });
 
+                librarianentry.setLocation(1372,400);
+                librarianentry.setSize(550,300);
+                librarianentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                librarianentry.setVisible(true);
 
                 JLabel name = new JLabel("Librarian Name");
                 JLabel email = new JLabel("Email");
@@ -2773,11 +2926,54 @@ public class Main extends JFrame {
                 pmain.add(p2,BorderLayout.SOUTH);
                 librarianentry.add(pmain);
                 librarianentry.add(pmain);
-                librarianentry.setLocation(1350,400);
-                librarianentry.setSize(500,300);
-                librarianentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                librarianentry.setVisible(true);
 
+
+            });
+
+            searchButton.addActionListener(se -> {
+                String searchValue =  searchField.getText().trim();
+                System.out.println("Search value: "+searchValue);
+                if(searchValue.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "You should input first!");
+                }else{
+
+                    try {
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        System.out.println("Driver created");
+                        Connection connection = DriverManager.getConnection(url, user, password);
+                        System.out.println("Database connected");
+
+                        String sqlSearch = "select * from users where userName like ?";
+                        PreparedStatement pst = connection.prepareStatement(sqlSearch);
+                        pst.setString(1,"%" + searchValue + "%");
+
+
+
+
+                        model.setRowCount(0);
+                        ResultSet resultSet = pst.executeQuery();
+                        while(resultSet.next()) {
+                            model.addRow(new Object[] {
+                                    resultSet.getInt(1),
+                                    resultSet.getString(2),
+                                    resultSet.getString(3),
+                                    resultSet.getString(4),
+                                    resultSet.getString(5),
+                                    resultSet.getString(6)
+                            });
+                        }
+
+
+                        connection.close();
+                    }//try
+                    catch(SQLException se1) {
+                        se1.printStackTrace();
+                    }catch(ClassNotFoundException ce) {
+                        System.out.println("ClassNotFoundException");
+                        ce.printStackTrace();
+
+                    }//catch
+                }
             });
 
 
@@ -3001,18 +3197,7 @@ public class Main extends JFrame {
     public Main() {
 
 
-        searchField.addActionListener(e -> {
-            searchButton.doClick();
-        });
 
-        searchField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    searchButton.doClick();
-                }
-            }
-        });
 
         SwingUtilities.invokeLater(() -> b1.doClick());// starting the program by showing Book Lists
 
@@ -3071,11 +3256,7 @@ public class Main extends JFrame {
         add(pBottom, BorderLayout.SOUTH);
         add(pMenu, BorderLayout.WEST);
 
-        searchField.setPreferredSize(new Dimension(250, 40));
 
-        searchPanel.add(searchField);
-        searchPanel.add(searchButton);
-        panel.add(searchPanel,BorderLayout.NORTH);
         panel.add(pMain,BorderLayout.CENTER);
         panel.add(pMainPanel, BorderLayout.SOUTH);
         pMainPanel.setPreferredSize(new Dimension(500,40));
