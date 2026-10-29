@@ -1,6 +1,7 @@
 package group;
 
 
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.SQLException;
@@ -19,11 +20,11 @@ public class Main extends JFrame {
 
 //    String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
 //    String port = "10007";
-//    String database = "project";
+//    String database = "defaultdb";
 //    String user = "avnadmin";//avnadmin
 //    String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
-    //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
- //   String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
+//    //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
+//    String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
     String url = "jdbc:mysql://localhost:3306/project_copy";//local
     String user = "root";
     String password = "694737";
@@ -35,7 +36,7 @@ public class Main extends JFrame {
     JPanel pMainPanel = new JPanel();
     JPanel panel = new JPanel(new BorderLayout());
 
-    JLabel lTop = new JLabel("📚 Library Management System");
+    JLabel lTop = new JLabel("Library Management System");
     JLabel lMenu = new JLabel("DashBoard");
     JLabel login = new JLabel("Logged in: "+user);
 
@@ -87,22 +88,51 @@ public class Main extends JFrame {
 
     String selectedBox;
 
-    JTextField searchField = new JTextField(15);
+    JTextField searchField = new JTextField();
+
     JButton searchButton = new JButton("Search");
 
+
     JPanel searchPanel = new JPanel();
+
+    private boolean bookEntryOpen = false;
+    private boolean memberEntryOpen = false;
+    private boolean borrowEntryOpen = false;
+    private boolean returnEntryOpen = false;
+    private boolean librarianEntryOpen = false;
+
+
 
 
     class ShowBookList implements ActionListener{
 
         public void actionPerformed(ActionEvent e) {
 
+
             for (ActionListener listener : bEdit.getActionListeners()) {
                 bEdit.removeActionListener(listener);
             }
 
+
+
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+            searchPanel.setVisible(true);
+
+
+
+            searchField.setText("Search by book name or author");
+
+
+            searchField.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
+                }
+            });
+
+
 
 
 
@@ -152,7 +182,8 @@ public class Main extends JFrame {
             JTable table = new JTable(model);
             table.setRowHeight(25);
             table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
-            table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+            table.getTableHeader().setBackground(new Color(207, 108, 37));//table header box bgcolor
+            table.getTableHeader().setForeground(new Color(255,255,255));
             table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
             //make the text in table CENTER
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -215,16 +246,16 @@ public class Main extends JFrame {
                 Connection connection = DriverManager.getConnection(url, user, password);
                 System.out.println("Database connected");
                 Statement statement = connection.createStatement();
-                String sqlSelect = "select * from BookList";
+                String sqlSelect = "select * from booklist";
 //                if(selectedBox == "All"){
 //                    sqlSelect = "select * from BookList";
 //                }else
                 if(selectedBox == "programming"){
-                    sqlSelect = "select * from BookList where Category = 'programming'";
+                    sqlSelect = "select * from booklist where Category = 'programming'";
                 }else if(selectedBox == "mathematic"){
-                    sqlSelect = "select * from BookList where Category = 'mathematic'";
+                    sqlSelect = "select * from booklist where Category = 'mathematic'";
                 }else if(selectedBox == "history"){
-                    sqlSelect = "select * from BookList where Category = 'history'";
+                    sqlSelect = "select * from booklist where Category = 'history'";
                 }
 
                 ResultSet resultSet = statement.executeQuery(sqlSelect);
@@ -241,6 +272,41 @@ public class Main extends JFrame {
 
                 JScrollPane scrollPane = new JScrollPane(table);
                 scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+                table.getTableHeader().setForeground(new Color(255,255,255));
+
+                verticalBar.setUI(new BasicScrollBarUI() {
+                    @Override
+                    protected void configureScrollBarColors() {
+                        thumbColor = new Color(191, 159, 126);       // Terracotta
+                        thumbDarkShadowColor = new Color(191, 159, 126);
+                        thumbHighlightColor = new Color(191, 159, 126);
+                        thumbLightShadowColor = new Color(191, 159, 126);
+                        trackColor = new Color(245, 235, 221);      // Cream
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                verticalBar.setBackground(new Color(191, 159, 126));
+                verticalBar.setOpaque(true);
+               // vertiScrollBar.setBackground(new Color(191, 159, 126));
 
                 pMain.add(scrollPane, BorderLayout.CENTER);
                 pMain.revalidate();
@@ -309,7 +375,7 @@ public class Main extends JFrame {
                     try {
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         Connection connection = DriverManager.getConnection(url, user, password);
-                        String booksql = "UPDATE BookList SET " + columnName + " = ? WHERE bookID = ?";
+                        String booksql = "UPDATE booklist SET " + columnName + " = ? WHERE bookID = ?";
 
                         PreparedStatement ps = connection.prepareStatement(booksql);
                         ps.setObject(1, inputedValue);
@@ -349,11 +415,24 @@ public class Main extends JFrame {
                 bookEditFrame.add(panel);
 
                 cancelButton.addActionListener( b3e -> {
-                   // pMainPanel.add(bBookEntry);
+                    // pMainPanel.add(bBookEntry);
                     bBookEntry.setVisible(true);
                     bEdit.setVisible(false);
                     table.clearSelection();
                     bookEditFrame.dispose();
+                });
+
+                jt1.addActionListener(oe -> {
+                    okButton.doClick();
+                });
+
+                jt1.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            okButton.doClick();
+                        }
+                    }
                 });
 
 
@@ -378,13 +457,37 @@ public class Main extends JFrame {
 
             });
 
-            bBookEntry.addActionListener( be2 -> {
+            bBookEntry.addActionListener(be2 -> {
+
+                if (bookEntryOpen) {
+                    return;
+                }
+
+                bookEntryOpen = true;
+
+                JFrame bookentry = new JFrame();
+                bookentry.setTitle("Book Entry");
+
+
+
+                bookentry.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        bookEntryOpen = false;
+                        bEdit.setVisible(true);
+                        bBookEntry.setVisible(true);
+                    }
+                });
+
+                // Keep the rest of your existing code here.
+
+
 //                pMainPanel.remove(bEdit);
 //                pMainPanel.remove(bBookEntry);
                 bEdit.setVisible(false);
                 bBookEntry.setVisible(false);
-                JFrame bookentry = new JFrame();
-                bookentry.setTitle("Book Entry");
+
+
                 bookentry.setLocation(1350,400);
                 bookentry.setSize(500,300);
                 bookentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -521,16 +624,16 @@ public class Main extends JFrame {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(url, user, password);
-                
-                    String sqlInsert = "INSERT INTO BookList(bookTitle, author, publisher, publishYear, Category) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
-                    pstatement.setString(1, bname);
-                    pstatement.setString(2, aname);
-                    pstatement.setString(3, pname);
-                    pstatement.setString(4, pyear);
-                    pstatement.setString(5, pcategory);
-                    pstatement.executeUpdate();
- 
+
+                            String sqlInsert = "INSERT INTO booklist(bookTitle, author, publisher, publishYear, Category) VALUES (?, ?, ?, ?, ?)";
+                            PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
+                            pstatement.setString(1, bname);
+                            pstatement.setString(2, aname);
+                            pstatement.setString(3, pname);
+                            pstatement.setString(4, pyear);
+                            pstatement.setString(5, pcategory);
+                            pstatement.executeUpdate();
+
                             connection.close();
 
 
@@ -564,58 +667,74 @@ public class Main extends JFrame {
                     bookentry.dispose();
 
                 });
+
+
+
+                tcategory.addActionListener(oe -> {
+                    save.doClick();
+                });
+
+                tcategory.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            save.doClick();
+                        }
+                    }
+                });
+
                 pmain.add(p1,BorderLayout.CENTER);
                 pmain.add(p2,BorderLayout.SOUTH);
                 bookentry.add(pmain);
-                
+
 
 
             });
 
             searchButton.addActionListener(se -> {
-               String searchValue =  searchField.getText().trim();
-               System.out.println("Search value: "+searchValue);
-               if(searchValue.isEmpty()){
-                   JOptionPane.showMessageDialog(null, "You should input first!");
-               }else{
+                String searchValue =  searchField.getText().trim();
+                System.out.println("Search value: "+searchValue);
+                if(searchValue.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "You should input first!");
+                }else{
 
-                   try {
-                       Class.forName("com.mysql.cj.jdbc.Driver");
-                       System.out.println("Driver created");
-                       Connection connection = DriverManager.getConnection(url, user, password);
-                       System.out.println("Database connected");
+                    try {
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        System.out.println("Driver created");
+                        Connection connection = DriverManager.getConnection(url, user, password);
+                        System.out.println("Database connected");
 
-                       String sqlSearch = "select * from BookList where bookTitle like ? OR author like ?";
-                       PreparedStatement pst = connection.prepareStatement(sqlSearch);
-                       pst.setString(1,"%" + searchValue + "%");
-                       pst.setString(2, "%" + searchValue + "%");
-
-
-
-                       model.setRowCount(0);
-                       ResultSet resultSet = pst.executeQuery();
-                       while(resultSet.next()) {
-                           model.addRow(new Object[] {
-                                   resultSet.getInt(1),
-                                   resultSet.getString(2),
-                                   resultSet.getString(3),
-                                   resultSet.getString(4),
-                                   resultSet.getInt(5),
-                                   resultSet.getString(6)
-                           });
-                       }
+                        String sqlSearch = "select * from booklist where bookTitle like ? OR author like ?";
+                        PreparedStatement pst = connection.prepareStatement(sqlSearch);
+                        pst.setString(1,"%" + searchValue + "%");
+                        pst.setString(2, "%" + searchValue + "%");
 
 
-                       connection.close();
-                   }//try
-                   catch(SQLException se1) {
-                       se1.printStackTrace();
-                   }catch(ClassNotFoundException ce) {
-                       System.out.println("ClassNotFoundException");
-                       ce.printStackTrace();
 
-                   }//catch
-               }
+                        model.setRowCount(0);
+                        ResultSet resultSet = pst.executeQuery();
+                        while(resultSet.next()) {
+                            model.addRow(new Object[] {
+                                    resultSet.getInt(1),
+                                    resultSet.getString(2),
+                                    resultSet.getString(3),
+                                    resultSet.getString(4),
+                                    resultSet.getInt(5),
+                                    resultSet.getString(6)
+                            });
+                        }
+
+
+                        connection.close();
+                    }//try
+                    catch(SQLException se1) {
+                        se1.printStackTrace();
+                    }catch(ClassNotFoundException ce) {
+                        System.out.println("ClassNotFoundException");
+                        ce.printStackTrace();
+
+                    }//catch
+                }
             });
 
 
@@ -632,7 +751,10 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+            searchPanel.setVisible(true);
             categoryBox.setVisible(false);
+
+            searchField.setText("Search by member name");
 
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bReturnEntry);
@@ -665,7 +787,8 @@ public class Main extends JFrame {
             table.setRowHeight(25);
 
             table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
-            table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+            table.getTableHeader().setBackground(new Color(207, 108, 37));//table header box bgcolor
+            table.getTableHeader().setForeground(new Color(255,255,255));
             table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
             //make the text in table CENTER
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -700,6 +823,41 @@ public class Main extends JFrame {
 
                 JScrollPane scrollPane = new JScrollPane(table);
                 scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+
+
+                verticalBar.setUI(new BasicScrollBarUI() {
+                    @Override
+                    protected void configureScrollBarColors() {
+                        thumbColor = new Color(191, 159, 126);       // Terracotta
+                        thumbDarkShadowColor = new Color(191, 159, 126);
+                        thumbHighlightColor = new Color(191, 159, 126);
+                        thumbLightShadowColor = new Color(191, 159, 126);
+                        trackColor = new Color(245, 235, 221);      // Cream
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                verticalBar.setBackground(new Color(191, 159, 126));
+                verticalBar.setOpaque(true);
+
                 pMain.add(scrollPane, BorderLayout.CENTER);
                 pMain.revalidate();
                 pMain.repaint();
@@ -861,6 +1019,19 @@ public class Main extends JFrame {
                     memberEditFrame.dispose();
                 });
 
+                jt1.addActionListener(se -> {
+                    okBtn.doClick();
+                });
+
+                jt1.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            okBtn.doClick();
+                        }
+                    }
+                });
+
 
 
                 okBtn.setPreferredSize(new Dimension(100,50));
@@ -884,10 +1055,29 @@ public class Main extends JFrame {
             });
 
             bMemberEntry.addActionListener( be2 -> {
-                bEdit.setVisible(false);
-                bMemberEntry.setVisible(false);
+                if (memberEntryOpen) {
+                    return;
+                }
+
+                memberEntryOpen = true;
+
                 JFrame memberentry = new JFrame();
                 memberentry.setTitle("Member Entry");
+
+
+
+                memberentry.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        memberEntryOpen = false;
+                        bEdit.setVisible(true);
+                        bMemberEntry.setVisible(true);
+                    }
+                });
+
+                bEdit.setVisible(false);
+                bMemberEntry.setVisible(false);
+
                 memberentry.setLocation(1350,400);
                 memberentry.setSize(550,300);
                 memberentry.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1050,6 +1240,19 @@ public class Main extends JFrame {
                     memberentry.dispose();
                 });
 
+                tmemberRDate.addActionListener(oe -> {
+                    save.doClick();
+                });
+
+                tmemberRDate.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            save.doClick();
+                        }
+                    }
+                });
+
                 pmain.add(p1,BorderLayout.CENTER);
                 pmain.add(p2,BorderLayout.SOUTH);
                 memberentry.add(pmain);
@@ -1073,6 +1276,8 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+            searchPanel.setVisible(false);
 
             categoryBox.setVisible(false);
 
@@ -1101,13 +1306,14 @@ public class Main extends JFrame {
             bLibrarianEntry.setVisible(false);
 
             // creating table for data outputs
-            String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date","Return Date"};
+            String[] columns = {"Borrow ID","Book ID","Member ID","Borrow Date","Due Date"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
             JTable table = new JTable(model);
             table.setRowHeight(25);
 
             table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
-            table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+            table.getTableHeader().setBackground(new Color(207, 108, 37));//table header box bgcolor
+            table.getTableHeader().setForeground(new Color(255,255,255));
             table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
             //make the text in table CENTER
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -1134,12 +1340,45 @@ public class Main extends JFrame {
                             resultSet.getInt(2),
                             resultSet.getInt(3),
                             resultSet.getString(4),
-                            resultSet.getString(5),
-                            resultSet.getString(6)
+                            resultSet.getString(5)
                     });
                 }
 
                 JScrollPane scrollPane = new JScrollPane(table);
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+
+
+                verticalBar.setUI(new BasicScrollBarUI() {
+                    @Override
+                    protected void configureScrollBarColors() {
+                        thumbColor = new Color(191, 159, 126);       // Terracotta
+                        thumbDarkShadowColor = new Color(191, 159, 126);
+                        thumbHighlightColor = new Color(191, 159, 126);
+                        thumbLightShadowColor = new Color(191, 159, 126);
+                        trackColor = new Color(245, 235, 221);      // Cream
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                verticalBar.setBackground(new Color(191, 159, 126));
+                verticalBar.setOpaque(true);
                 scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
                 pMain.add(scrollPane, BorderLayout.CENTER);
                 pMain.revalidate();
@@ -1230,7 +1469,7 @@ public class Main extends JFrame {
                     }
 
 
-                    String[] columnsql = { "borrowId", "bookID", "memberId", "borrowDate", "dueDate", "returnDate" };
+                    String[] columnsql = { "borrowId", "bookID", "memberId", "borrowDate", "dueDate" };
 
                     if (selectedColumn < 0 || selectedColumn >= columnsql.length) {
                         System.out.println("Invalid column index: " + selectedColumn);
@@ -1290,6 +1529,19 @@ public class Main extends JFrame {
                     borrowEditFrame.dispose();
                 });
 
+                jt1.addActionListener(se -> {
+                    okBtn.doClick();
+                });
+
+                jt1.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            okBtn.doClick();
+                        }
+                    }
+                });
+
 
 
                 okBtn.setPreferredSize(new Dimension(100,50));
@@ -1313,19 +1565,40 @@ public class Main extends JFrame {
             });// end of bEdit
 
             bBorrowEntry.addActionListener( be2 -> {
+                if (borrowEntryOpen) {
+                    return;
+                }
+
+                borrowEntryOpen = true;
+
                 JFrame borrowentry = new JFrame();
+
                 borrowentry.setTitle("Borrow Entry");
+
+
+
+                borrowentry.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        borrowEntryOpen = false;
+                        bEdit.setVisible(true);
+                        bBorrowEntry.setVisible(true);
+                    }
+                });
+
+
+
                 JLabel bookId = new JLabel("Book Id");
                 JLabel memberId = new JLabel("Member ID");
                 JLabel borrowDate = new JLabel("Borrow Date");
                 JLabel dueDate = new JLabel("Due Date");
-                JLabel returnDate = new JLabel("Return Date");
+
 
                 JTextField tbookId = new JTextField(20);
                 JTextField tmemberId = new JTextField(20);
                 JTextField tborrowDate = new JTextField(20);
                 JTextField tdueDate = new JTextField(20);
-                JTextField treturnDate = new JTextField(20);
+
 
                 JButton save = new JButton("Save");
                 JButton cancel = new JButton("Cancel");
@@ -1338,7 +1611,7 @@ public class Main extends JFrame {
                 memberId.setFont(myFont);
                 borrowDate.setFont(myFont);
                 dueDate.setFont(myFont);
-                returnDate.setFont(myFont);
+
 
                 Color fontColor = new Color(32, 32, 32);
                 //setting labels fonts color
@@ -1346,14 +1619,14 @@ public class Main extends JFrame {
                 memberId.setForeground(fontColor);
                 borrowDate.setForeground(fontColor);
                 dueDate.setForeground(fontColor);
-                returnDate.setForeground(fontColor);
+
 
                 //setting size of text field box
                 tbookId.setPreferredSize(new Dimension(20, 30));
                 tmemberId.setPreferredSize(new Dimension(20, 30));
                 tborrowDate.setPreferredSize(new Dimension(20, 30));
                 tdueDate.setPreferredSize(new Dimension(20, 30));
-                treturnDate.setPreferredSize(new Dimension(20, 30));
+
 
                 // for alignment of label and text fields
                 LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 5, 10);
@@ -1362,26 +1635,26 @@ public class Main extends JFrame {
                 JPanel pla = new JPanel(layout);
                 JPanel ply = new JPanel(layout);
                 JPanel plp = new JPanel(layout);
-                JPanel pld = new JPanel(layout);
+                //JPanel pld = new JPanel(layout);
                 //adding labels into aligned panels
                 plb.add(bookId);
                 pla.add(memberId);
                 ply.add(borrowDate);
                 plp.add(dueDate);
-                pld.add(returnDate);
+
 
                 //setting text field panels alignments
                 JPanel ptb = new JPanel(layout);
                 JPanel pta = new JPanel(layout);
                 JPanel pty = new JPanel(layout);
                 JPanel ptp = new JPanel(layout);
-                JPanel ptd = new JPanel(layout);
+                //JPanel ptd = new JPanel(layout);
                 //adding text fields into aligned panels
                 ptb.add(tbookId);
                 pta.add(tmemberId);
                 pty.add(tborrowDate);
                 ptp.add(tdueDate);
-                ptd.add(treturnDate);
+                //ptd.add(treturnDate);
 
                 //adding small panels into main GridLayout panel
                 p1.add(plb);
@@ -1396,8 +1669,8 @@ public class Main extends JFrame {
                 p1.add(plp);
                 p1.add(ptp);
 
-                p1.add(pld);
-                p1.add(ptd);
+//                p1.add(pld);
+//                p1.add(ptd);
 
                 //creating panel for buttons
                 JPanel p2 = new JPanel(new FlowLayout());
@@ -1432,22 +1705,21 @@ public class Main extends JFrame {
                     String tmemberIdText = tmemberId.getText();
                     String tborrowDateText = tborrowDate.getText();
                     String tdueDateText = tdueDate.getText();
-                    String treturnDateText = treturnDate.getText();
+                    //String treturnDateText = treturnDate.getText();
 
-                    if(tbookIdText.equals("") || tmemberIdText.equals("") || tborrowDateText.equals("") || tdueDateText.equals("") || treturnDateText.equals("")) {
+                    if(tbookIdText.equals("") || tmemberIdText.equals("") || tborrowDateText.equals("") || tdueDateText.equals("")) {
                         JOptionPane.showMessageDialog(null, "You should input first!");
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(url, user, password);
-                            String sqlInsert = "insert into borrows(bookID,memberId,borrowDate,dueDate,returnDate) values('"+tbookIdText+"','"+tmemberIdText+"','"+tborrowDateText+"','"+tdueDateText+"','"+treturnDateText+"')";
+                            String sqlInsert = "insert into borrows(bookID,memberId,borrowDate,dueDate) values('"+tbookIdText+"','"+tmemberIdText+"','"+tborrowDateText+"','"+tdueDateText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
                             connection.close();
                             tbookId.setText("");
                             tmemberId.setText("");
                             tborrowDate.setText("");
-                            treturnDate.setText("");
                             tdueDate.setText("");
 
                         }//try
@@ -1468,6 +1740,19 @@ public class Main extends JFrame {
 
                 cancel.addActionListener(ce -> {
                     borrowentry.dispose();
+                });
+
+                tdueDate.addActionListener(oe -> {
+                    save.doClick();
+                });
+
+                tdueDate.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            save.doClick();
+                        }
+                    }
                 });
 
                 pmain.add(p1,BorderLayout.CENTER);
@@ -1496,6 +1781,8 @@ public class Main extends JFrame {
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
 
+            searchPanel.setVisible(false);
+
             categoryBox.setVisible(false);
 //            pMainPanel.remove(bBorrowEntry);
 //            pMainPanel.remove(bMemberEntry);
@@ -1522,13 +1809,14 @@ public class Main extends JFrame {
             bLibrarianEntry.setVisible(false);
 
             // creating table for data outputs
-            String[] columns = {"Return ID","Borrow ID","Return Date","Fine"};
+            String[] columns = {"Return ID","Borrow ID","Borrow Date","Return Date","Fine"};
             DefaultTableModel model = new DefaultTableModel(columns,0);
             JTable table = new JTable(model);
             table.setRowHeight(25);
 
             table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
-            table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+            table.getTableHeader().setBackground(new Color(207, 108, 37));//table header box bgcolor
+            table.getTableHeader().setForeground(new Color(255,255,255));
             table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
             //make the text in table CENTER
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -1554,11 +1842,46 @@ public class Main extends JFrame {
                             resultSet.getInt(1),
                             resultSet.getInt(2),
                             resultSet.getString(3),
-                            resultSet.getDouble(4),
+                            resultSet.getString(4),
+                            resultSet.getDouble(5),
                     });
                 }
 
                 JScrollPane scrollPane = new JScrollPane(table);
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+
+
+                verticalBar.setUI(new BasicScrollBarUI() {
+                    @Override
+                    protected void configureScrollBarColors() {
+                        thumbColor = new Color(191, 159, 126);       // Terracotta
+                        thumbDarkShadowColor = new Color(191, 159, 126);
+                        thumbHighlightColor = new Color(191, 159, 126);
+                        thumbLightShadowColor = new Color(191, 159, 126);
+                        trackColor = new Color(245, 235, 221);      // Cream
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                verticalBar.setBackground(new Color(191, 159, 126));
+                verticalBar.setOpaque(true);
                 scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
                 pMain.add(scrollPane, BorderLayout.CENTER);
                 pMain.revalidate();
@@ -1646,7 +1969,7 @@ public class Main extends JFrame {
                         return;
                     }
 
-                    String[] columnsql = { "returnId", "borrowId", "returnDate", "fine" };
+                    String[] columnsql = { "returnId", "borrowId", "borrowDate", "returnDate", "fine" };
 
                     if (selectedColumn < 0 || selectedColumn >= columnsql.length) {
                         System.out.println("Invalid column index: " + selectedColumn);
@@ -1688,7 +2011,7 @@ public class Main extends JFrame {
                 });
 
 
-                returnEditFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                returnEditFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 returnEditFrame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -1704,6 +2027,19 @@ public class Main extends JFrame {
                 cancelBtn.addActionListener( b3e -> {
                     table.clearSelection();
                     returnEditFrame.dispose();
+                });
+
+                jt1.addActionListener(se -> {
+                    okBtn.doClick();
+                });
+
+                jt1.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            okBtn.doClick();
+                        }
+                    }
                 });
 
 
@@ -1729,16 +2065,37 @@ public class Main extends JFrame {
             });//end of bEdit
 
             bReturnEntry.addActionListener( be2 -> {
+                if (returnEntryOpen) {
+                    return;
+                }
+
+                returnEntryOpen = true;
+
                 JFrame returnentry = new JFrame();
                 returnentry.setTitle("Return Entry");
+
+
+
+                returnentry.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        returnEntryOpen = false;
+                        bEdit.setVisible(true);
+                        bReturnEntry.setVisible(true);
+                    }
+                });
+
+
                 JLabel borrowId = new JLabel("Borrow ID");
+                JLabel borrowDate = new  JLabel("Borrow Date");
                 JLabel returnDate = new JLabel("Return Date");
                 JLabel fine = new JLabel("Fine");
                 Font myFont = new Font("Roboto", Font.PLAIN, 20);
-                JPanel p1 = new JPanel(new GridLayout(5, 2));
+                JPanel p1 = new JPanel(new GridLayout(4, 2));
 
 
                 JTextField tborrowId = new JTextField(20);
+                JTextField tborrowDate = new JTextField(20);
                 JTextField treturnDate = new JTextField(20);
                 JTextField tfine = new JTextField(20);
 
@@ -1750,6 +2107,7 @@ public class Main extends JFrame {
 
                 //setting labels fonts
                 borrowId.setFont(myFont);
+                borrowDate.setFont(myFont);
                 returnDate.setFont(myFont);
                 fine.setFont(myFont);
 
@@ -1757,12 +2115,14 @@ public class Main extends JFrame {
                 Color fontColor = new Color(32, 32, 32);
                 //setting labels fonts color
                 borrowId.setForeground(fontColor);
+                borrowDate.setForeground(fontColor);
                 returnDate.setForeground(fontColor);
                 fine.setForeground(fontColor);
 
 
                 //setting size of text field box
                 tborrowId.setPreferredSize(new Dimension(20, 30));
+                tborrowDate.setPreferredSize(new Dimension(20, 30));
                 treturnDate.setPreferredSize(new Dimension(20, 30));
                 tfine.setPreferredSize(new Dimension(20, 30));
 
@@ -1771,22 +2131,27 @@ public class Main extends JFrame {
                 LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 5, 10);
                 //setting label panels alignments
                 JPanel plb = new JPanel(layout);
+                JPanel pbd = new JPanel(layout);
                 JPanel pla = new JPanel(layout);
                 JPanel ply = new JPanel(layout);
 
+
                 //adding labels into aligned panels
                 plb.add(borrowId);
+                pbd.add(borrowDate);
                 pla.add(returnDate);
                 ply.add(fine);
 
 
                 //setting text field panels alignments
                 JPanel ptb = new JPanel(layout);
+                JPanel ptd = new JPanel(layout);
                 JPanel pta = new JPanel(layout);
                 JPanel pty = new JPanel(layout);
 
                 //adding text fields into aligned panels
                 ptb.add(tborrowId);
+                ptd.add(tborrowDate);
                 pta.add(treturnDate);
                 pty.add(tfine);
 
@@ -1795,11 +2160,16 @@ public class Main extends JFrame {
                 p1.add(plb);
                 p1.add(ptb);
 
+                p1.add(pbd);
+                p1.add(ptd);
+
                 p1.add(pla);
                 p1.add(pta);
 
                 p1.add(ply);
                 p1.add(pty);
+
+
 
 
                 //creating panel for buttons
@@ -1821,32 +2191,36 @@ public class Main extends JFrame {
 
                 //setting background color of label panels and textfield panels
                 plb.setBackground(bgcolor);
+                pbd.setBackground(bgcolor);
                 pla.setBackground(bgcolor);
                 ply.setBackground(bgcolor);
 
 
                 ptb.setBackground(bgcolor);
+                ptd.setBackground(bgcolor);
                 pta.setBackground(bgcolor);
                 pty.setBackground(bgcolor);
 
 
                 save.addActionListener(se -> {
                     String tborrowIdText = tborrowId.getText();
+                    String tborrowDateText = tborrowDate.getText();
                     String treturnDateText = treturnDate.getText();
                     String tfineText = tfine.getText();
 
 
-                    if(tborrowIdText.equals("") || treturnDateText.equals("") || tfineText.equals("")) {
+                    if(tborrowIdText.equals("") || treturnDateText.equals("") || tfineText.equals("") || tborrowDateText.equals("")) {
                         JOptionPane.showMessageDialog(null, "You should input first!");
                     }else {
                         try {
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             Connection connection = DriverManager.getConnection(url, user, password);
-                            String sqlInsert = "insert into returns(borrowId,returnDate,fine) values('"+tborrowIdText+"','"+treturnDateText+"','"+tfineText+"')";
+                            String sqlInsert = "insert into returns(borrowId,borrowDate,returnDate,fine) values('"+tborrowIdText+"','"+tborrowDateText+"','"+treturnDateText+"','"+tfineText+"')";
                             PreparedStatement pstatement = connection.prepareStatement(sqlInsert);
                             pstatement.executeUpdate();
                             connection.close();
                             tborrowId.setText("");
+                            tborrowDate.setText("");
                             treturnDate.setText("");
                             tfine.setText("");
 
@@ -1869,6 +2243,19 @@ public class Main extends JFrame {
 
                 cancel.addActionListener(ce -> {
                     returnentry.dispose();
+                });
+
+                tfine.addActionListener(oe -> {
+                    save.doClick();
+                });
+
+                tfine.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            save.doClick();
+                        }
+                    }
                 });
 
                 pmain.add(p1,BorderLayout.CENTER);
@@ -1895,6 +2282,10 @@ public class Main extends JFrame {
 
             pMain.removeAll();
             pMain.setLayout(new BorderLayout());
+
+            searchPanel.setVisible(true);
+
+            searchField.setText("Search by Librarian name");
 
             categoryBox.setVisible(false);
 
@@ -1930,7 +2321,8 @@ public class Main extends JFrame {
             table.setRowHeight(25);
 
             table.getTableHeader().setFont(table.getTableHeader().getFont().deriveFont(Font.BOLD));// set table header font bold
-            table.getTableHeader().setBackground(new Color(160,160,160));//table header box bgcolor
+            table.getTableHeader().setBackground(new Color(207, 108, 37));//table header box bgcolor
+            table.getTableHeader().setForeground(new Color(255,255,255));
             table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width,30));//table header box size
             //make the text in table CENTER
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -1953,13 +2345,47 @@ public class Main extends JFrame {
                     model.addRow(new Object[] {
                             resultSet.getInt(1),
                             resultSet.getString(2),
-                            resultSet.getString	(3),
+                            resultSet.getString (3),
                             resultSet.getString(4),
                             resultSet.getString(5)
                     });
                 }
 
                 JScrollPane scrollPane = new JScrollPane(table);
+                JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+
+
+                verticalBar.setUI(new BasicScrollBarUI() {
+                    @Override
+                    protected void configureScrollBarColors() {
+                        thumbColor = new Color(191, 159, 126);       // Terracotta
+                        thumbDarkShadowColor = new Color(191, 159, 126);
+                        thumbHighlightColor = new Color(191, 159, 126);
+                        thumbLightShadowColor = new Color(191, 159, 126);
+                        trackColor = new Color(245, 235, 221);      // Cream
+                    }
+
+                    @Override
+                    protected JButton createDecreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    @Override
+                    protected JButton createIncreaseButton(int orientation) {
+                        return createZeroButton();
+                    }
+
+                    private JButton createZeroButton() {
+                        JButton button = new JButton();
+                        button.setPreferredSize(new Dimension(0, 0));
+                        button.setMinimumSize(new Dimension(0, 0));
+                        button.setMaximumSize(new Dimension(0, 0));
+                        return button;
+                    }
+                });
+
+                verticalBar.setBackground(new Color(191, 159, 126));
+                verticalBar.setOpaque(true);
                 scrollPane.setPreferredSize(new java.awt.Dimension(500,250));
                 pMain.add(scrollPane, BorderLayout.CENTER);
                 pMain.revalidate();
@@ -2109,6 +2535,19 @@ public class Main extends JFrame {
                     userEditFrame.dispose();
                 });
 
+                jt1.addActionListener(se -> {
+                    okBtn.doClick();
+                });
+
+                jt1.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            okBtn.doClick();
+                        }
+                    }
+                });
+
 
 
                 okBtn.setPreferredSize(new Dimension(100,50));
@@ -2132,9 +2571,27 @@ public class Main extends JFrame {
             });
 
             bLibrarianEntry.addActionListener( be2 -> {
+                if (librarianEntryOpen) {
+                    return;
+                }
+
+                librarianEntryOpen = true;
 
                 JFrame librarianentry = new JFrame();
                 librarianentry.setTitle("Librarian Entry");
+
+
+
+                librarianentry.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        librarianEntryOpen = false;
+                        bEdit.setVisible(true);
+                        bLibrarianEntry.setVisible(true);
+                    }
+                });
+
+
                 JLabel name = new JLabel("Librarian Name");
                 JLabel email = new JLabel("Email");
                 JLabel phone = new JLabel("Phone");
@@ -2298,6 +2755,20 @@ public class Main extends JFrame {
                     pMainPanel.add(bBookEntry);
                     librarianentry.dispose();
                 });
+
+                tpasswordLabel.addActionListener(oe -> {
+                    save.doClick();
+                });
+
+                tpasswordLabel.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            save.doClick();
+                        }
+                    }
+                });
+
                 pmain.add(p1,BorderLayout.CENTER);
                 pmain.add(p2,BorderLayout.SOUTH);
                 librarianentry.add(pmain);
@@ -2315,9 +2786,233 @@ public class Main extends JFrame {
 
 
 
+    // ===== Warm Library Theme (style-only additions) =====
+    private static final Color WOOD = new Color(62, 43, 32);          // #3E2B20
+    private static final Color TERRACOTTA = new Color(169, 83, 43);  // #A9532B
+    private static final Color CREAM = new Color(245, 235, 221);     // #F5EBDD
+    private static final Color BEIGE = new Color(232, 220, 203);     // #E8DCCB
+    private static final Color ESPRESSO = new Color(53, 35, 24);     // #352318
+    private static final Color TABLE_ALT = new Color(248, 242, 233);
+    private static final Color GRID = new Color(220, 207, 190);
+
+    private void installWarmLibraryTheme() {
+        applyWarmLibraryStyle(this);
+
+        // Style frames/dialogs created later (for example, Add New Book) without
+        // changing their existing listeners, layout, database code, or behavior.
+        Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+            if (event instanceof WindowEvent
+                    && ((WindowEvent) event).getID() == WindowEvent.WINDOW_OPENED) {
+                Window openedWindow = ((WindowEvent) event).getWindow();
+                SwingUtilities.invokeLater(() -> applyWarmLibraryStyle(openedWindow));
+            }
+        }, AWTEvent.WINDOW_EVENT_MASK);
+    }
+
+    private void applyWarmLibraryStyle(Component component) {
+        if (component == null) return;
+
+        if (component instanceof JFrame) {
+            JFrame frame = (JFrame) component;
+            frame.getContentPane().setBackground(CREAM);
+            styleChildren(frame.getContentPane());
+            return;
+        }
+
+        if (component instanceof JDialog) {
+            JDialog dialog = (JDialog) component;
+            dialog.getContentPane().setBackground(CREAM);
+            styleChildren(dialog.getContentPane());
+            return;
+        }
+
+        if (component instanceof JPanel) {
+            JPanel currentPanel = (JPanel) component;
+            if (currentPanel == pMenu) {
+                currentPanel.setBackground(WOOD);
+                currentPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, BEIGE));
+            } else if (currentPanel == pTop) {
+                currentPanel.setBackground(BEIGE);
+                currentPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, WOOD));
+            } else if (currentPanel == pBottom) {
+                currentPanel.setBackground(BEIGE);
+                currentPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, GRID));
+            } else if (currentPanel == pMain || currentPanel == pMainPanel || currentPanel == panel) {
+                currentPanel.setBackground(CREAM);
+                currentPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+            } else if (currentPanel == searchPanel) {
+                currentPanel.setBackground(CREAM);
+            } else {
+                currentPanel.setBackground(CREAM);
+            }
+            currentPanel.setOpaque(true);
+            styleChildren(currentPanel);
+            return;
+        }
+
+        if (component instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) component;
+            scrollPane.setBackground(CREAM);
+            scrollPane.getViewport().setBackground(CREAM);
+            styleChildren(scrollPane);
+            return;
+        }
+
+        if (component instanceof JTable) {
+            styleWarmTable((JTable) component);
+            return;
+        }
+
+        if (component instanceof JComboBox) {
+            JComboBox<?> combo = (JComboBox<?>) component;
+            combo.setBackground(CREAM);
+            combo.setForeground(ESPRESSO);
+            combo.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            combo.setOpaque(true);
+            return;
+        }
+
+        if (component instanceof JTextField || component instanceof JPasswordField
+                || component instanceof JTextArea) {
+            component.setBackground(Color.WHITE);
+            component.setForeground(ESPRESSO);
+            component.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            if (component instanceof JTextField) {
+                ((JTextField) component).setCaretColor(TERRACOTTA);
+                ((JTextField) component).setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(GRID),
+                        BorderFactory.createEmptyBorder(5, 8, 5, 8)));
+            }
+            return;
+        }
+
+        if (component instanceof JButton) {
+            styleWarmButton((JButton) component);
+            return;
+        }
+
+        if (component instanceof JLabel) {
+            JLabel label = (JLabel) component;
+            label.setForeground(ESPRESSO);
+            if (label == lTop) {
+                label.setForeground(ESPRESSO);
+                label.setFont(new Font("Serif", Font.BOLD, 20));
+            } else if (label == lMenu) {
+                label.setForeground(CREAM);
+                label.setFont(new Font("Serif", Font.BOLD, 16));
+            } else {
+                label.setFont(new Font("SansSerif", Font.PLAIN, 13));
+            }
+        }
+    }
+
+    private void styleChildren(Container container) {
+        // Also style components added later by the existing page/navigation code.
+        if (container instanceof JComponent) {
+            JComponent swingContainer = (JComponent) container;
+            if (swingContainer.getClientProperty("warmLibraryThemeListener") == null) {
+                swingContainer.putClientProperty("warmLibraryThemeListener", Boolean.TRUE);
+                swingContainer.addContainerListener(new ContainerAdapter() {
+                    @Override
+                    public void componentAdded(ContainerEvent event) {
+                        SwingUtilities.invokeLater(() -> applyWarmLibraryStyle(event.getChild()));
+                    }
+                });
+            }
+        }
+        for (Component child : container.getComponents()) {
+            applyWarmLibraryStyle(child);
+        }
+    }
+
+    private void styleWarmButton(JButton button) {
+        String buttonText = button.getText() == null ? "" : button.getText().trim().toLowerCase();
+        button.setFont(new Font("SansSerif", Font.BOLD, 12));
+        button.setFocusPainted(false);
+        button.setOpaque(true);
+        button.setBorderPainted(false);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        if (button == b1 || button == b2 || button == b3 || button == b4 || button == b5) {
+            button.setBackground(WOOD);
+            button.setForeground(CREAM);
+            button.setBorder(BorderFactory.createEmptyBorder(10, 12, 10, 12));
+        } else if (buttonText.contains("delete")) {
+            button.setBackground(new Color(173, 58, 48));
+            button.setForeground(Color.WHITE);
+        } else if (buttonText.contains("cancel") || buttonText.contains("close")) {
+            button.setBackground(BEIGE);
+            button.setForeground(ESPRESSO);
+            button.setBorder(BorderFactory.createLineBorder(GRID));
+            button.setBorderPainted(true);
+        } else if (buttonText.contains("edit") || buttonText.contains("rename")) {
+            button.setBackground(Color.GREEN);
+            button.setForeground(ESPRESSO);
+
+        } else {
+            button.setBackground(TERRACOTTA);
+            button.setForeground(Color.WHITE);
+        }
+    }
+
+    private void styleWarmTable(JTable table) {
+        table.setBackground(Color.WHITE);
+        table.setForeground(ESPRESSO);
+        table.setSelectionBackground(new Color(230, 198, 170));
+        table.setSelectionForeground(ESPRESSO);
+        table.setGridColor(GRID);
+        table.setRowHeight(Math.max(table.getRowHeight(), 25));
+        table.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        table.setShowGrid(true);
+        table.setIntercellSpacing(new Dimension(1, 1));
+
+        javax.swing.table.JTableHeader header = table.getTableHeader();
+        if (header != null) {
+            header.setBackground(WOOD);
+            header.setForeground(CREAM);
+            header.setFont(new Font("SansSerif", Font.BOLD, 12));
+            header.setOpaque(true);
+        }
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable source, Object value,
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
+                Component cell = super.getTableCellRendererComponent(
+                        source, value, isSelected, hasFocus, row, column);
+                if (isSelected) {
+                    cell.setBackground(new Color(230, 198, 170));
+                    cell.setForeground(ESPRESSO);
+                } else {
+                    cell.setBackground(row % 2 == 0 ? Color.WHITE : TABLE_ALT);
+                    cell.setForeground(ESPRESSO);
+                }
+                setHorizontalAlignment(SwingConstants.CENTER);
+                setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
+                return cell;
+            }
+        };
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            table.getColumnModel().getColumn(column).setCellRenderer(renderer);
+        }
+    }
+    // ===== End warm theme additions =====
+
     public Main() {
 
 
+        searchField.addActionListener(e -> {
+            searchButton.doClick();
+        });
+
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    searchButton.doClick();
+                }
+            }
+        });
 
         SwingUtilities.invokeLater(() -> b1.doClick());// starting the program by showing Book Lists
 
@@ -2376,6 +3071,8 @@ public class Main extends JFrame {
         add(pBottom, BorderLayout.SOUTH);
         add(pMenu, BorderLayout.WEST);
 
+        searchField.setPreferredSize(new Dimension(250, 40));
+
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         panel.add(searchPanel,BorderLayout.NORTH);
@@ -2384,7 +3081,8 @@ public class Main extends JFrame {
         pMainPanel.setPreferredSize(new Dimension(500,40));
         add(panel, BorderLayout.CENTER);
 
-
+        // Apply the warm wood-and-cream theme after existing components are assembled.
+        installWarmLibraryTheme();
 
     }
     void removeEditFrame(JFrame frame){
@@ -2394,7 +3092,7 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         Main frame = new Main();
         frame.setTitle("Library Management System");
-        frame.setSize(800, 600);
+        frame.setSize(850, 700);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -2402,4 +3100,3 @@ public class Main extends JFrame {
 
     }
 }
-
