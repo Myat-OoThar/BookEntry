@@ -1,5 +1,5 @@
 package group;
-
+//hello
 
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
@@ -18,16 +18,16 @@ import java.time.format.DateTimeFormatter;
 public class Main extends JFrame {
 
 
-//    String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
-//    String port = "10007";
-//    String database = "defaultdb";
-//    String user = "avnadmin";//avnadmin
-//    String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
-//    //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
-//    String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
-    String url = "jdbc:mysql://localhost:3306/project_copy";//local
-    String user = "root";
-    String password = "694737";
+    String host = "mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com";
+    String port = "10007";
+    String database = "defaultdb";
+    String user = "avnadmin";//avnadmin
+    String password = "AVNS_Z5VaWvb_pxjqBMtks36";//AVNS_Z5VaWvb_pxjqBMtks36
+    //String url = "jdbc:mysql://avnadmin:AVNS_Z5VaWvb_pxjqBMtks36@mysql-26ea90b1-myatoothar5-1f5f.c.aivencloud.com:10007/project?ssl-mode=REQUIRED";
+    String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?sslMode=REQUIRED";//aiven
+//    String url = "jdbc:mysql://localhost:3306/project_copy";//local
+//    String user = "root";
+//    String password = "694737";
 
     JPanel pTop = new JPanel();
     JPanel pBottom = new JPanel(new GridLayout(1,3));
